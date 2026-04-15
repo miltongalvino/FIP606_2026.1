@@ -1,0 +1,5 @@
+"0","Fungicidas2 <-fungicidas |>  mutate(incidencia = inf_seeds/n_seeds)
+"
+"2","Error in mutate(fungicidas, incidencia = inf_seeds/n_seeds) : 
+  não foi possível encontrar a função ""mutate""
+"

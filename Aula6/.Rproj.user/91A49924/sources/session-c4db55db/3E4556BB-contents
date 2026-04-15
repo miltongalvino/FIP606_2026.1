@@ -1,0 +1,276 @@
+---
+title: "Aula6"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+## Carregar o conjunto de dados
+
+```{r}
+library(readxl)
+library(tidyverse)
+
+fungicidas <- read_excel("dados_diversos.xlsx", "fungicida_vaso")  #se forem 2 niveis de fator quantitativo vc trata ela como qualitativa, pois não existem quantidade de gradiente
+
+
+fungicidas2 <- fungicidas |> 
+  mutate(incidencia = inf_seeds/n_seeds,
+         dose = factor(dose))
+
+
+```
+
+## Visualização de dados
+
+```{r}
+library(ggplot2)
+
+fungicidas2 |> 
+  mutate(dose = factor(dose)) |> 
+  ggplot(aes(treat, severity, color = dose))+
+  geom_jitter(width=0.1)+
+  facet_wrap(~dose)+
+  theme(legend.position = "none")
+  
+  interaction.plot(fungicidas$treat,
+                   fungicidas2$dose, fungicidas$severity)
+  
+```
+
+```{r}
+
+#verifica individualmente cada 1
+
+m1 <- lm(severity ~ treat, 
+         data = fungicidas2)
+
+anova(m1)
+
+
+m2 <- lm(severity ~ dose, 
+         data = fungicidas2)
+
+anova(m2)
+
+m3 <- lm(severity ~ treat*dose, 
+         data = fungicidas2)
+
+anova(m3)
+
+#verificar a interação
+```
+
+Analysis of Variance Table
+
+Response: severity Df Sum Sq Mean Sq F value Pr(\>F)\
+treat 1 0.113232 0.113232 30.358 4.754e-05 \*\*\*\
+dose 1 0.073683 0.073683 19.755 0.0004077 ***treat:dose 1 0.072739 0.072739 19.502 0.0004326*** #olha pra cá, a interação foi significativa Residuals 16 0.059678 0.003730\
+--- Signif. codes: 0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+```{r}
+library(DHARMa)
+
+plot(simulateResiduals(m3))
+```
+
+```{r}
+library(emmeans)
+
+medias_m3 <- emmeans (m3, ~ treat|dose)
+
+medias_m3
+
+medias2_m3 <- emmeans (m3, ~ treat|dose)
+
+medias2_m3
+
+
+library(multcomp)
+
+cld(medias_m3, LETTERS=letters)
+
+cld(medias2_m3, LETTERS=letters)
+
+```
+
+Faz nesse caso uma tabela (tipo a que eu fiz no TCC)
+
+Mas e se os fatores forem signifcativos, mas a interação deles não for: Faz dois gráficos com os dois fatores separados (um gráfico pra fungicida e 1 gráfico pra dose)
+
+| Tratamento       |    Dose 0.5    |    Dose 2.0    |
+|:-----------------|:--------------:|:--------------:|
+| **Ionic liquid** | 0.29 ± 0.03 aA | 0.05 ± 0.03 aB |
+| **Tebuconazole** | 0.02 ± 0.03 bA | 0.02 ± 0.03 aA |
+
+**Nota:** Médias seguidas de erro padrão (± SE). Letras minúsculas comparam tratamentos dentro de cada dose (coluna) e letras maiúsculas comparam doses dentro de cada tratamento (linha). Médias com a mesma letra não diferem entre si pelo teste de Tukey (p \> 0,05).
+
+OU
+
+::: {#tbl-anova}
+| Tratamento       |    Dose 0.5    |    Dose 2.0    |
+|:-----------------|:--------------:|:--------------:|
+| **Ionic liquid** | 0.29 ± 0.03 aA | 0.05 ± 0.03 aB |
+| **Tebuconazole** | 0.02 ± 0.03 bA | 0.02 ± 0.03 aA |
+
+Tabela 1: Médias estimadas e comparação de grupos.
+:::
+
+## OUTRO LÁ
+
+```{r}
+library(readxl)
+campo <- read_excel("dados_diversos.xlsx", 'fungicida_campo')
+
+campo2 <- campo |> 
+  mutate(trat=factor(TRAT),
+         bloco= factor(BLOCO)) |> 
+  dplyr::select(trat, bloco, PROD) |> 
+  rename (prod=PROD)
+```
+
+```{r}
+
+library(ggplot2)
+campo2 |>  ggplot(aes(trat, prod))+
+  geom_point(alpha=0.5)+
+  ylim(1500,6000)+
+  stat_summary()+
+  theme_classic()+
+  labs(x="Tratamento fungicida",
+       y= "produtividade (kg/ha)")
+```
+
+##Modelo de ANOVA
+
+```{r}
+m_bloco <- lm(prod ~ trat + bloco, data= campo2)
+
+m_bloco
+
+library(DHARMa)
+plot(simulateResiduals(m_bloco))
+
+anova_m_bloco <- anova(m_bloco)
+
+anova_m_bloco
+
+library(emmeans)
+medias_m_bloco <- emmeans(m_bloco, ~trat)
+medias_m_bloco
+
+cld(medias_m_bloco, Letters = LETTERS)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(multcompView) # se não estiver carregado, para as letras
+
+# 1. Salve o resultado do cld() em um objeto e remova os espaços extras das letras
+letras <- cld(medias_m_bloco, Letters = LETTERS)
+letras$.group <- trimws(letras$.group) # Tira os espaços em branco antes/depois das letras
+
+# 2. Gere o gráfico sobrepondo os dados
+ggplot() +
+  # Adiciona os pontos brutos (jitter) da tabela campo2
+  geom_jitter(data = campo2, 
+              aes(x = as.factor(trat), y = prod), 
+              width = 0.1, alpha = 0.4, color = "gray50") +
+  
+  # Adiciona as barras de erro (Intervalo de Confiança do modelo)
+  geom_errorbar(data = letras, 
+                aes(x = as.factor(trat), ymin = lower.CL, ymax = upper.CL), 
+                width = 0.2, linewidth = 0.8, color = "black") +
+  
+  # Adiciona as médias estimadas (emmeans) do modelo
+  geom_point(data = letras, 
+             aes(x = as.factor(trat), y = emmean), 
+             size = 3, color = "darkred") +
+  
+  # Adiciona as letras de agrupamento acima do limite superior do intervalo (upper.CL + 150)
+  geom_text(data = letras, 
+            aes(x = as.factor(trat), y = upper.CL + 150, label = .group), 
+            fontface = "bold", size = 4.5, color = "black") +
+  
+  # Define limites e temas
+  ylim(1500, 6000) +
+  theme_classic() +
+  labs(x = "Tratamento fungicida",
+       y = "Produtividade")
+```
+
+# MOFO
+
+```{r}
+mofo <- read_excel("dados_diversos.xlsx", "mofo")
+
+#Visualizar
+mofo |> 
+  ggplot(aes(inc, yld))+
+  geom_point(width=0.1)+
+  geom_smooth(method= "lm", se=F)+
+  stat_cor(method = "pearson", label.x = 3, label.y = 30)+
+  facet_wrap(~study)
+
+
+
+library(ggpubr)
+mofo |> 
+  ggplot(aes(inc, scl))+
+  geom_point(width=0.1)+
+  geom_smooth(method= "lm", se=F)+
+  stat_cor(method = "pearson", label.x = 3, label.y = 30)+
+  facet_wrap(~study)
+
+
+library(ggplot2)
+library(ggpubr)
+
+mofo |> 
+  ggplot(aes(inc, scl, color = factor(study))) +
+  # Usando geom_jitter para lidar com o width que você deseja
+  geom_jitter(width = 0.1, alpha = 0.7) + 
+  geom_smooth(method = "lm", se = FALSE) +
+  # O segredo: stat_cor vai herdar o 'color' e gerar um rótulo para cada estudo
+  stat_cor(method = "pearson", 
+           # label.x e label.y definem a posição inicial do primeiro rótulo
+           label.x = 0, 
+           # Se quiser que os textos não fiquem um sobre o outro, 
+           # pode ser necessário ajustar a posição manualmente ou usar geom_text_repel
+           show.legend = FALSE) +
+  labs(x = "Incidência da doença",
+       y = "Peso dos escleródios (g)", # Ajuste a unidade conforme necessário
+       color = "Estudo",
+       title = "Correlação entre Incidência e Peso de Escleródios") +
+  theme_minimal()
+ #ou
+mofo |> 
+  ggplot(aes(inc, scl, color = factor(study)))+
+  geom_point(width=0.1)+
+  geom_smooth(method= "lm", se=F)+
+  stat_cor(method = "pearson", label.x = 0,  show.legend = FALSE)+
+  labs(x= "Incidência da doença",
+       y="Peso dos escleródios (??/??)",
+       title = "Correlação entre Incidência e Peso de Escleródios")
+
+  
+#coeficiente de correlação
+cor.test(mofo$inc, mofo$yld, method="pearson")    #de todos juntos (não recomendado)
+cor(mofo$inc, mofo$yld, method="pearson") #dá só o valor de correlação; cor.test dá uma resposta mais completa
+
+mofo2 <- mofo |> group_by(study) |> 
+  summarise(correlacao= cor (inc,yld), method="pearson")
+
+summary(mofo2)
+
+
+```
+
+```{r}
+hist(mofo$yld)
+hist(mofo$inc)
+hist(mofo$scl)
+hist(log(mofo$scl))
+```

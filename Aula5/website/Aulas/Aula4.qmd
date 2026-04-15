@@ -1,0 +1,628 @@
+---
+title: "aula4"
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+execute:
+  warning: false
+  message: false
+---
+
+# Aula 4 — comparação de médias: teste *t*, testes não paramétricos e ANOVA
+
+## Objetivos da aula
+
+Nesta aula, vamos organizar uma sequência de análises estatísticas voltadas à comparação de médias em situações comuns em experimentos biológicos e agronômicos. O foco será em três contextos:
+
+1.  comparação entre **dois grupos independentes**;
+
+2.  comparação entre **duas condições medidas nos mesmos indivíduos**;
+
+3.  comparação entre **três ou mais grupos**.
+
+Ao longo da aula, usaremos exemplos reais do arquivo `dados_diversos.xlsx`, discutindo a lógica estatística, as hipóteses, as fórmulas e a implementação em `R`.
+
+## Pacotes utilizados
+
+```{r}
+#| warning: false
+#| message: false
+library(tidyverse)
+library(readxl)
+library(epifitter)
+library(emmeans)
+library(multcomp)
+```
+
+------------------------------------------------------------------------
+
+# Parte 1 — Leitura dos dados e cálculo da AUDPC
+
+## Leitura da planilha `curve`
+
+O primeiro conjunto de dados contém avaliações de severidade ao longo do tempo, em dois tratamentos de irrigação. Antes de comparar tratamentos, é útil visualizar a progressão temporal da doença.
+
+```{r}
+dados <- read_excel("dados_diversos.xlsx","curve")
+
+glimpse(dados)
+head(dados)
+```
+
+## Resumo gráfico da severidade ao longo do tempo
+
+A seguir, calculamos a média e o desvio-padrão da severidade, em porcentagem, para cada combinação de tratamento e tempo de avaliação.
+
+```{r}
+   dados |>
+    group_by(Irrigation, day) |>            
+    summarise(
+      mean_sev = mean(severity * 100),
+    sd_sev = sd(severity * 100),
+    .groups = "drop"
+  ) |>
+  ggplot(aes(x = day, y = mean_sev, color = Irrigation, group = Irrigation)) +
+  geom_point(size = 2.1) +
+  geom_line() +
+  geom_errorbar(aes(ymin = mean_sev - sd_sev,
+                    ymax = mean_sev + sd_sev),
+                width = 1) +
+  ylim(0, 100) +
+  labs(
+    x = "Dias após a avaliação inicial",
+    y = "Severidade média (%)",
+    color = "Irrigação"
+  ) +
+  theme_minimal()
+```
+
+## Área abaixo da curva de progresso da doença
+
+Em estudos epidemiológicos, muitas vezes desejamos resumir toda a curva de progresso em uma única medida. Uma das medidas mais usadas é a **AUDPC** (*Area Under the Disease Progress Curve*), ou área abaixo da curva de progresso da doença.
+
+A fórmula geral da AUDPC, pelo método dos trapézios, é:
+
+$$
+AUDPC = \sum_{i=1}^{n-1} \left( \frac{y_i + y_{i+1}}{2} \right)(t_{i+1} - t_i)
+$$
+
+em que:
+
+-   $y_i$ e $y_{i+1}$ são as severidades observadas em duas avaliações consecutivas;
+-   $t_i$ e $t_{i+1}$ são os tempos correspondentes;
+-   $n$ é o número de avaliações.
+
+Essa estatística resume a intensidade da doença ao longo do tempo. Quanto maior a AUDPC, maior a quantidade acumulada de doença no período avaliado.
+
+```{r}
+dados2 <- dados |>
+  group_by(Irrigation, rep) |>
+  summarise(
+    audpc = AUDPC(day, severity),
+    .groups = "drop"
+  ) |>
+  mutate(Irrigation = as.factor(Irrigation))
+
+dados2
+```
+
+## Estatísticas descritivas da AUDPC
+
+Antes de qualquer teste formal, é recomendável resumir os dados por tratamento.
+
+```{r}
+resumo_audpc <- dados2 |>
+  group_by(Irrigation) |>
+  summarise(
+    mean_audpc = mean(audpc),
+    sd_audpc = sd(audpc),
+    n = n(),
+    se_audpc = sd_audpc / sqrt(n),
+    ic_95 = qt(0.975, df = n - 1) * se_audpc,
+    .groups = "drop"
+  )
+
+resumo_audpc
+```
+
+### Gráfico com média e desvio-padrão
+
+```{r}
+resumo_audpc |>
+  ggplot(aes(x = Irrigation, y = mean_audpc)) +
+  geom_col(width = 0.5, fill = "gray80") +
+  geom_point(size = 2) +
+  geom_errorbar(aes(ymin = mean_audpc - sd_audpc,
+                    ymax = mean_audpc + sd_audpc),
+                width = 0.1) +
+  labs(x = "Irrigação", y = "AUDPC média (± DP)") +
+   ylim(0,15)+
+  theme_minimal()
+```
+
+### Gráfico com média e erro-padrão da média
+
+O erro-padrão da média é dado por:
+
+$$
+EP(\bar{x}) = \frac{s}{\sqrt{n}}
+$$
+
+em que:
+
+-   $s$ é o desvio-padrão amostral;
+-   $n$ é o tamanho da amostra.
+
+```{r}
+resumo_audpc |>
+  ggplot(aes(x = Irrigation, y = mean_audpc)) +
+  geom_col(width = 0.5, fill = "gray80") +
+  geom_point(size = 2) +
+  geom_errorbar(aes(ymin = mean_audpc - se_audpc,
+                    ymax = mean_audpc + se_audpc),
+                width = 0.1) +
+  labs(x = "Irrigação", y = "AUDPC média (± EP)") +
+   ylim(0,15)+
+  theme_minimal()
+```
+
+### Gráfico com intervalo de confiança de 95%
+
+O intervalo de confiança para a média pode ser escrito como:
+
+$$
+\bar{x} \pm t_{\alpha/2,\, n-1} \times \frac{s}{\sqrt{n}}
+$$
+
+em que $t_{\alpha/2,\, n-1}$ é o quantil da distribuição *t* de Student com $n-1$ graus de liberdade.
+
+```{r}
+resumo_audpc |>
+  ggplot(aes(x = Irrigation, y = mean_audpc)) +
+  geom_col(width = 0.5, fill = "skyblue") +
+  geom_point(size = 2) +
+  geom_errorbar(aes(ymin = mean_audpc - ic_95,
+                    ymax = mean_audpc + ic_95),
+                width = 0.1) +
+  ylim(0,15)+
+  labs(x = "Irrigação", y = "AUDPC média (IC 95%)") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+# Parte 2 — Teste *t* para dois grupos independentes
+
+## Quando usar?
+
+O teste *t* para amostras independentes é usado quando queremos comparar as médias de **dois grupos distintos**, assumindo independência entre as observações.
+
+Neste caso, vamos comparar a AUDPC entre os dois tratamentos de irrigação.
+
+## Hipóteses
+
+As hipóteses do teste são:
+
+$$
+H_0: \mu_1 = \mu_2
+$$
+
+$$
+H_1: \mu_1 \neq \mu_2
+$$
+
+ou seja, a hipótese nula afirma que as médias populacionais são iguais, enquanto a hipótese alternativa afirma que elas diferem.
+
+## Estatística do teste
+
+Quando as variâncias são assumidas como diferentes, usa-se a versão de Welch do teste *t*, cuja estatística é:
+
+$$
+t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
+$$
+
+em que:
+
+-   $\bar{x}_1$ e $\bar{x}_2$ são as médias amostrais;
+-   $s_1^2$ e $s_2^2$ são as variâncias amostrais;
+-   $n_1$ e $n_2$ são os tamanhos amostrais.
+
+## Aplicação em R
+
+```{r}
+teste_t_audpc <- t.test(audpc ~ Irrigation, data = dados2)
+teste_t_audpc
+```
+
+## Interpretação
+
+O objeto retornado informa:
+
+-   a estatística *t*;
+-   os graus de liberdade;
+-   o valor de *p*;
+-   o intervalo de confiança para a diferença entre médias;
+-   as médias estimadas em cada grupo.
+
+Se o valor de *p* for menor que o nível de significância adotado, rejeitamos $H_0$ e concluímos que há evidência de diferença entre as médias.
+
+------------------------------------------------------------------------
+
+# Parte 3 — Teste *t* pareado
+
+## Situação experimental
+
+Agora usaremos a planilha `escala`, em que os mesmos avaliadores foram medidos em duas condições de avaliação. Nesse caso, as observações **não são independentes**, pois cada avaliador aparece nas duas condições.
+
+Logo, o teste adequado é o **teste *t* pareado**.
+
+```{r}
+escala <- read_excel("dados_diversos.xlsx", sheet = "escala")
+
+glimpse(escala)
+head(escala)
+```
+
+## Visualização inicial
+
+```{r}
+escala |>
+  ggplot(aes(x = assessment, y = log(acuracia))) +
+  geom_boxplot(outlier.colour = NA) +
+  geom_jitter(width = 0.1, alpha = 0.7) +
+  labs(x = "Tipo de avaliação", y = "log(acuracia)") +
+  theme_minimal()
+```
+
+## Organização dos dados em formato largo
+
+Para o teste pareado, é conveniente reorganizar a tabela de forma que cada linha corresponda a um avaliador e cada coluna a uma condição.
+
+```{r}
+escala_wide <- escala |>
+  dplyr::select(rater, assessment, acuracia) |>
+  pivot_wider(
+    names_from = assessment,
+    values_from = acuracia
+  )
+
+escala_wide
+```
+
+## Lógica do teste *t* pareado
+
+No teste pareado, o interesse recai sobre a diferença entre as duas medidas do mesmo indivíduo:
+
+$$
+d_i = x_{i1} - x_{i2}
+$$
+
+O teste é então realizado sobre a média das diferenças:
+
+$$
+H_0: \mu_d = 0
+$$
+
+$$
+H_1: \mu_d \neq 0
+$$
+
+A estatística do teste é:
+
+$$
+t = \frac{\bar{d}}{s_d / \sqrt{n}}
+$$
+
+em que:
+
+-   $\bar{d}$ é a média das diferenças;
+-   $s_d$ é o desvio-padrão das diferenças;
+-   $n$ é o número de pares.
+
+## Aplicação do teste *t* pareado
+
+```{r}
+teste_t_pareado <- t.test(
+  escala_wide$Aided1,
+  escala_wide$Unaided,
+  paired = TRUE
+)
+
+teste_t_pareado
+```
+
+## Visualização das diferenças
+
+Uma forma útil de compreender o teste pareado é visualizar explicitamente as diferenças entre pares.
+
+```{r}
+diferencas <- escala_wide |>
+  mutate(diff = Aided1 - Unaided)
+
+diferencas |>
+  ggplot(aes(x = diff)) +
+  geom_histogram(bins = 10, color = "white") +
+  labs(x = "Diferença pareada (Aided1 - Unaided)", y = "Frequência") +
+  theme_minimal()
+```
+
+------------------------------------------------------------------------
+
+# Parte 4 — Verificação da normalidade e alternativa não paramétrica
+
+## Por que verificar a normalidade?
+
+O teste *t* pareado assume que as **diferenças** entre pares seguem, aproximadamente, uma distribuição normal. Não é necessário que cada grupo separadamente seja normal; o foco está nas diferenças.
+
+## Inspeção gráfica e teste de Shapiro-Wilk
+
+Vamos olhar para as hipóteses do Shapiro-Wilk:
+
+-   $H_0$ (Hipótese Nula): Os dados **são normais** (seguem a curva de sino).
+
+-   $H_1$ (Hipótese Alternativa): Os dados **não são normais** (são tortos/assimétricos).
+
+Ou seja:
+
+-   Se der $p > 0.05$: Excelente! Não podemos rejeitar a $H_0$. Concluímos que os seus dados **são normais**. Sinal verde para fazer Testes T e ANOVAs sem medo.
+
+<!-- -->
+
+-   Se der $p \le 0.05$: Problema! Rejeitamos a $H_0$. A estatística diz que os seus dados **não são normais**.
+
+```{r}
+qqnorm(diferencas$diff)
+qqline(diferencas$diff)
+
+shapiro.test(diferencas$diff)
+```
+
+## Teste não paramétrico de Wilcoxon pareado
+
+Se a suposição de normalidade das diferenças for claramente violada, uma alternativa clássica é o **teste de postos sinalizados de Wilcoxon**.
+
+É a alternativa não-paramétrica ao clássico Teste T
+
+Em vez de calcular a média das diferenças e ficar confuso caso haja um outlier (um valor muito extremo que puxa a média para cima), o Wilcoxon usa um sistema de ranking (posições). Ele pega em todas as diferenças entre os métodos, ignora os zeros (empates), e ordena os dados do menor para o maior. Depois, ele compara a soma dos "rankings" das diferenças positivas com a soma dos "rankings" das diferenças negativas.
+
+Esse teste não compara médias, mas sim a tendência central das diferenças, com base nas magnitudes ordenadas dos desvios em relação a zero.
+
+As hipóteses continuam sendo, em essência:
+
+$$
+H_0: \text{a distribuição das diferenças é centrada em zero}
+$$
+
+$$
+H_1: \text{a distribuição das diferenças não é centrada em zero}
+$$
+
+```{r}
+teste_wilcox <- wilcox.test(
+  escala_wide$Unaided,
+  escala_wide$Aided1,
+  paired = TRUE
+)
+
+teste_wilcox
+```
+
+## Comentário metodológico
+
+Em conjuntos de dados pequenos, é recomendável usar o gráfico QQ, o histograma das diferenças e o conhecimento do experimento em conjunto, em vez de depender exclusivamente do teste de Shapiro-Wilk. Pequenos desvios da normalidade nem sempre invalidam o teste *t*, sobretudo quando não há assimetria extrema ou valores discrepantes muito influentes.
+
+------------------------------------------------------------------------
+
+# Parte 5 — ANOVA para comparação de três ou mais grupos
+
+## Situação experimental
+
+Agora analisaremos a planilha `micelial`, que contém dados de taxa de crescimento micelial (`tcm`) para diferentes espécies.
+
+Quando o objetivo é comparar a média de uma variável resposta entre **três ou mais grupos**, a abordagem clássica é a **análise de variância** (ANOVA).
+
+```{r}
+micelial <- read_excel("dados_diversos.xlsx", sheet = "micelial")
+
+micelial |>
+  count(especie)
+```
+
+## Visualização exploratória
+
+```{r}
+set.seed(2)
+
+micelial |>
+  ggplot(aes(x = reorder(especie, tcm), y = tcm)) +
+  geom_boxplot(outlier.colour = NA) +
+  geom_jitter(width = 0.2, alpha = 0.7) +
+  coord_flip() +
+  labs(x = "Espécie", y = "Taxa de crescimento micelial") +
+  theme_minimal()
+```
+
+## Modelo de ANOVA
+
+O modelo clássico de ANOVA de um fator pode ser escrito como:
+
+$$
+Y_{ij} = \mu + \tau_i + \varepsilon_{ij}
+$$
+
+em que:
+
+-   $Y_{ij}$ é a observação da unidade $j$ no grupo $i$;
+-   $\mu$ é a média geral;
+-   $\tau_i$ é o efeito do grupo $i$;
+-   $\varepsilon_{ij}$ é o erro aleatório, assumido com distribuição normal, média zero e variância constante.
+
+As hipóteses são:
+
+$$
+H_0: \mu_1 = \mu_2 = \cdots = \mu_k
+$$
+
+$$
+H_1: \text{pelo menos uma média difere das demais}
+$$
+
+A estatística de teste é a razão entre o quadrado médio entre grupos e o quadrado médio residual:
+
+$$
+F = \frac{QM_{trat}}{QM_{res}}
+$$
+
+Valores altos de $F$ indicam maior evidência contra a hipótese nula.
+
+## Ajuste do modelo
+
+```{r}
+m1 <- lm(tcm ~ especie, data = micelial)
+summary(m1)
+anova(m1)
+```
+
+------------------------------------------------------------------------
+
+# Parte 6 — Diagnóstico dos pressupostos da ANOVA
+
+A ANOVA clássica assume:
+
+1.  independência dos erros;
+2.  normalidade dos resíduos;
+3.  homogeneidade de variâncias.
+
+## Inspeção da normalidade resíduos
+
+```{r}
+hist(m1$residuals)
+qqnorm(m1$residuals)
+qqline(m1$residuals)
+shapiro.test(m1$residuals)
+```
+
+## Homogeneidade de variâncias
+
+O teste de Bartlett avalia a hipótese de igualdade das variâncias entre grupos:
+
+$$
+H_0: \sigma_1^2 = \sigma_2^2 = \cdots = \sigma_k^2
+$$
+
+-   $H_0$ (Hipótese Nula): As variâncias de todas as espécies são iguais (homogêneas). **(É o que nós queremos!)**
+
+-   $H_1$ (Hipótese Alternativa): Pelo menos uma das espécies tem uma variação muito maior ou menor que as outras (heterogêneas).
+
+```{r}
+bartlett.test(tcm ~ especie, data = micelial)
+```
+
+## Comentário
+
+Assim como na análise anterior, os diagnósticos não devem ser interpretados apenas de forma mecânica. A inspeção gráfica dos resíduos é essencial para avaliar desvios importantes da normalidade e da homogeneidade.
+
+------------------------------------------------------------------------
+
+# Parte 7 — Médias ajustadas com `emmeans` e comparação de Tukey
+
+## Por que não comparar pares com vários testes *t*?
+
+Depois que a ANOVA indica diferença global entre médias, surge a pergunta: **quais grupos diferem entre si?**
+
+Uma estratégia inadequada seria fazer vários testes *t* independentes, pois isso inflaciona a probabilidade de erro do tipo I. Para contornar esse problema, utilizamos procedimentos de comparação múltipla que controlam esse erro, como o método de **Tukey**.
+
+## Médias marginais estimadas
+
+O pacote `emmeans` calcula as médias ajustadas do modelo, também chamadas de médias marginais estimadas.
+
+```{r}
+library(emmeans)
+
+medias_m1 <- emmeans(m1, ~ especie)
+medias_m1
+```
+
+## Comparações múltiplas de Tukey
+
+```{r}
+pairs(medias_m1, adjust = "tukey")
+```
+
+## Letras de agrupamento
+
+Uma forma prática de resumir os resultados é usar letras para indicar grupos estatisticamente semelhantes. Médias seguidas pela mesma letra não diferem entre si ao nível de significância adotado.
+
+```{r}
+medias_m1b <- cld(medias_m1, Letters = letters)
+medias_m1b
+```
+
+## Gráfico das médias com intervalos de confiança e letras
+
+```{r}
+medias_m1b |>
+  ggplot(aes(x = reorder(especie, emmean), y = emmean, label = .group)) +
+  geom_point(size = 2) +
+  geom_errorbar(aes(ymin = lower.CL, ymax = upper.CL), width = 0.06) +
+  geom_text(hjust = 0, nudge_y = 0.12, size = 4) +
+  geom_boxplot()+
+  coord_flip() +
+  labs(
+    x = "",
+    y = "Taxa de crescimento micelial (mm/dia)") +
+  theme_classic()
+```
+
+------------------------------------------------------------------------
+
+# Parte 8 — Síntese conceitual da aula
+
+## 1. Teste *t* para amostras independentes
+
+Usado para comparar a média de dois grupos independentes.
+
+-   Unidade analítica em cada grupo é diferente.
+-   Exemplo desta aula: comparação da AUDPC entre tratamentos de irrigação.
+
+## 2. Teste *t* pareado
+
+Usado quando as duas medidas vêm dos mesmos indivíduos ou de unidades emparelhadas.
+
+-   O teste é realizado sobre as diferenças entre pares.
+-   Exemplo desta aula: comparação da acurácia dos mesmos avaliadores sob duas condições.
+
+## 3. Teste de Wilcoxon pareado
+
+Alternativa não paramétrica ao teste *t* pareado.
+
+-   Útil quando a distribuição das diferenças é muito assimétrica ou quando há clara violação da normalidade.
+
+## 4. ANOVA
+
+Usada para comparar três ou mais médias simultaneamente.
+
+-   Primeiro testa-se o efeito global.
+-   Depois, se necessário, investigam-se comparações múltiplas.
+
+## 5. `emmeans` e Tukey
+
+Permitem estimar médias ajustadas e comparar grupos com controle do erro associado a múltiplas comparações.
+
+------------------------------------------------------------------------
+
+# Parte 9 — Sugestões de interpretação para o relatório
+
+Ao redigir resultados, procure separar claramente:
+
+1.  **descrição dos dados**, com médias e medidas de dispersão;
+2.  **resultado do teste global**, com estatística e valor de *p*;
+3.  **comparações específicas**, quando cabíveis;
+4.  **interpretação biológica** dos resultados.
+
+Exemplo de estrutura textual:
+
+> A AUDPC média foi maior em um dos tratamentos de irrigação. O teste *t* para amostras independentes indicou diferença significativa entre as médias dos grupos (*p* \< 0,05). No experimento com avaliadores, a acurácia diferiu entre as condições quando analisada de forma pareada. Para os dados de crescimento micelial, a ANOVA indicou efeito de espécie, e as comparações de Tukey permitiram identificar quais espécies apresentaram médias distintas.
+
+------------------------------------------------------------------------

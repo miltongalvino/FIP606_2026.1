@@ -1,0 +1,5 @@
+"0","dados_experimento_geo <- dados_experimento |>
+  left_join(coordenadas_locais, by = c(""location"" = ""location""))
+"
+"2","Erro: objeto 'dados_experimento' não encontrado
+"

@@ -1,0 +1,51 @@
+"0","ggplot(data.frame(x = c(-limite_x, limite_x)), aes(x)) +
+  stat_function(
+    fun = dt,
+    args = list(df = gl_observado),
+    linewidth = 1
+  ) +
+  geom_vline(
+    xintercept = c(-abs(t_observado), abs(t_observado)),
+    colour = ""red"",
+    linetype = ""dashed"",
+    linewidth = 0.8
+  ) +
+  stat_function(
+    fun = dt,
+    args = list(df = gl_observado),
+    xlim = c(-limite_x, -abs(t_observado)),
+    geom = ""area"",
+    fill = ""red"",
+    alpha = 0.25
+  ) +
+  stat_function(
+    fun = dt,
+    args = list(df = gl_observado),
+    xlim = c(abs(t_observado), limite_x),
+    geom = ""area"",
+    fill = ""red"",
+    alpha = 0.25
+  ) +
+  annotate(
+    ""text"",
+    x = 0,
+    y = 0.35,
+    label = ""Distribuição t sob H0"",
+    fontface = ""italic""
+  ) +
+  annotate(
+    ""text"",
+    x = 0,
+    y = 0.30,
+    label = paste0(""t = "", round(t_observado, 2),
+                   ""   |   p = "", signif(p_observado, 3))
+  ) +
+  labs(
+    title = ""Visualização da estatística t e do p-valor"",
+    x = ""Valores de t"",
+    y = ""Densidade""
+  ) +
+  theme_minimal()
+"
+"2","Erro: objeto 'p_observado' não encontrado
+"

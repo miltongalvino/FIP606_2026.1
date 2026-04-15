@@ -1,0 +1,112 @@
+---
+title: "Aula1"
+author: "Milton"
+format: html
+editor: visual
+---
+
+## Tópico 1
+
+Apresentação da **disciplina** e *conceitos* em experimentação
+
+![](agricultura-no-brasil-produtor-trabalhando-na-lavoura.webp)
+
+##A base da linguagem R
+
+```{r}
+a <- 1
+b <- 2
+
+a+b
+
+```
+
+## Instalação de pacotes
+
+```{r}
+#instalar o tidyverse
+#install.packages("tidyverse") ###Eu coloquei esse comando em "#" pq ele tava dando erro pra renderizar, porém no dia a dia ele funciona normal
+
+#carregar o tidyverse
+library(tidyverse)
+library(agricolae)
+dados<-data(disease)
+
+```
+
+#Instalação de pacotes de fontes diversas
+
+```{r}
+#Instalar do CRAM; Ex: Pliman
+install.packages("pliman")
+
+#Instalar do github; Ex: Pliman
+remotes::install_github("TiagoOlivoto/pliman")
+
+#Instalar pacotes do Bioconductor
+install.packages("BiocManager")
+#Exemplo do EBImage
+BiocManager::install("EBImage")
+
+```
+
+##Criação de vetores para formação de um data frame
+
+#Utilizaremos a seguinte tabela como base:
+
+| Planta | Tratamento | Severidade da doença (%) |
+|--------|------------|--------------------------|
+| 1      | Controle   | 42                       |
+| 2      | Controle   | 38                       |
+| 3      | Controle   | 45                       |
+| 4      | Controle   | 40                       |
+| 5      | Fungicida  | 12                       |
+| 6      | Fungicida  | 18                       |
+| 7      | Fungicida  | 15                       |
+| 8      | Fungicida  | 10                       |
+
+```{r}
+planta <- c(1,2,3,4,5,6,7,8)
+#ou 
+planta <- seq(1:8)
+planta
+
+tratamento <- c("Controle","Controle","Controle","Controle", "Fungicida","Fungicida","Fungicida","Fungicida")
+
+severidade <- c(42,38,45,40,12,18,15,10)
+
+dados <- data.frame (planta,tratamento,severidade)
+
+dados
+```
+
+##Criação de gráficos a partir do data frame (dados)
+
+```{r}
+
+library(ggplot2)
+#Ex 1:
+ggplot(dados, aes(tratamento,severidade))+ #Fazer base de fundo para o gráfico
+  geom_point(color= "blue", size=3, shape=2)+ #Adicionar e modificar os pontos
+  ylim(0,50) #Definir o limite do eixo Y
+  theme_classic(base_size = 14) #Escolher os temas
+  labs(x="Tratamento",
+       y="Severidade (%)") #Corrigir as legendas dos eixos
+
+#Ex 1:
+ggplot()
+ggplot(dados, aes(tratamento,severidade))+
+  geom_point()+ 
+  geom_jitter(width=0.2)   #quando os pontos estão  muito juntos e separa eles
+
+```
+
+## Testes estatísticos
+
+Um dos usos mais comuns do R dentro da agronomia/fitopatologia, se não o principal, é para a realização de testes estatísticos. A exemplo deste teste T usando os dados do data frame anterior.
+
+```{r}
+resultado_teste <- t.test(severidade ~ tratamento, data = dados, var.equal= TRUE) #CONFERIR DPS PQ ELE FEZ NO GEMINI ESSE CODIGO
+
+resultado_teste
+```

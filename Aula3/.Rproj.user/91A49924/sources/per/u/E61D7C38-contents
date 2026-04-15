@@ -1,0 +1,44 @@
+read_csv()
+
+glimpse()
+
+d23a <- d23 |> 
+  mutate(yld=log(yield))
+
+d22a <- d22 |> 
+  rename( 
+    year = year,
+    site = location,
+    cult = cultivar,
+    rep = block,
+    trt = treatment,
+    sev = severity,
+    yld = yield_kg_ha)
+
+d_all <- rbind (d22a,d23a,d24a)  #unir os dataframes com os mesmos nomes de colunas
+
+d_alla <- d_all |>  mutate(trt=case_match(trt,
+                                              "ctrl"~"Control",
+                                              "fung"~"Fungicide",
+                                              .default = trt)) |> 
+  mutate(site = case_match(site, 
+                           "Vicosa" ~ "Viçosa",
+                           "Uberlandia"~"Uberlândia",
+                           .default=site))
+
+
+site <- c("Viçosa", "Uberlândia")
+lat <- c(-20.7544, -18.9186)
+long <- c(-42.8819, -48.2772)
+
+coordenadas <- data.frame (site, lat, long) 
+
+d_allc <- left_join(d_alla, coordenadas)
+
+d_allc |> 
+  ggplot(aes(trt,yld))+
+  geom_jitter (width=0.1)+
+  facet_wrap(~site)
+
+
+t_test(d_allc, yld~trt)

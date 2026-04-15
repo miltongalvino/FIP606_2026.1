@@ -1,0 +1,29 @@
+"0","# 2. Gráfico
+ggplot(campo2, aes(x = as.factor(trat), y = prod)) +
+  # Pontos originais (os dados brutos)
+  geom_point(alpha = 0.3, color = ""gray50"", position = position_jitter(width = 0.1)) +
+  
+  # Barras de Erro (Intervalo de Confiança)
+  geom_errorbar(data = dados_plot, 
+                aes(x = trat, y = emmean, ymin = lower, ymax = upper), 
+                width = 0.2, size = 0.8, color = ""black"") +
+  
+  # Ponto da Média (emmean)
+  geom_point(data = dados_plot, aes(x = trat, y = emmean), 
+             color = ""red"", size = 3) +
+  
+  # Letras do Teste de Tukey
+  geom_text(data = dados_plot, 
+            aes(x = trat, y = upper, label = letras), 
+            vjust = -0.8,  # Empurra a letra um pouco para cima da barra
+            fontface = ""bold"") +
+  
+  # Estética
+  ylim(1500, 6500) +
+  theme_classic() +
+  labs(x = ""Tratamento fungicida"",
+       y = ""Produtividade (kg/ha)"",
+       title = ""Produtividade por Tratamento com IC (95%)"")
+"
+"2","Erro: objeto 'dados_plot' não encontrado
+"

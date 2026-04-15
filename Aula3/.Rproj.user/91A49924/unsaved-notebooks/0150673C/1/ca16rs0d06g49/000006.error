@@ -1,0 +1,1 @@
+{"frames":[{"func":"annotate(geom = \"text\", x = 1.5, y = max(dados_experimento_geo$yield_kg_ha, \n    na.rm = TRUE) + 80, label = rotulo_teste)","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Erro: objeto 'rotulo_teste' não encontrado\n"}

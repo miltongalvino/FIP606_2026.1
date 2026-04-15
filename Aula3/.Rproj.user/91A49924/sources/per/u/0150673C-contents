@@ -1,0 +1,512 @@
+---
+  title: "Aula 3 – Importação, integração, teste t e visualização de dados no R"
+subtitle: "Fluxo didático com tidyverse, joins e comparação de médias"
+author: "FIP 606"
+format:
+  html:
+  toc: true
+toc-depth: 3
+number-sections: true
+theme: cosmo
+code-fold: false
+code-tools: false
+execute:
+  echo: true
+warning: false
+message: false
+lang: pt-BR
+editor_options: 
+  chunk_output_type: console
+---
+  
+  # Introdução
+  
+  Nesta aula vamos construir um fluxo completo de trabalho para dados experimentais salvos em múltiplos arquivos. Em uma situação real de pesquisa, é comum receber bases produzidas por pessoas diferentes, em anos diferentes e com pequenas inconsistências de nomes, categorias e formatos. Por isso, antes de ajustar modelos ou produzir gráficos, precisamos organizar a base de dados de forma coerente.
+
+Ao longo desta aula, vamos:
+  
+  -   importar arquivos de anos distintos;
+-   inspecionar a estrutura de cada tabela;
+-   padronizar nomes de colunas;
+-   harmonizar categorias;
+-   unir tabelas por linhas;
+-   adicionar informações auxiliares com `join`;
+-   comparar médias de produtividade entre tratamentos com o teste *t*;
+-   visualizar o valor da estatística *t* e o *p*-valor;
+-   construir um gráfico final anotado com o resultado do teste.
+
+# Objetivos
+
+Ao final da aula, você deverá ser capaz de:
+  
+  -   importar dados de múltiplos arquivos `.csv`;
+-   reconhecer inconsistências entre tabelas;
+-   padronizar variáveis com `rename()`, `mutate()` e `select()`;
+-   empilhar tabelas com `bind_rows()`;
+-   enriquecer tabelas com `left_join()`;
+-   executar e interpretar um teste *t* para comparar duas médias;
+-   relacionar o teste *t* com sua representação gráfica;
+-   construir gráficos informativos com `ggplot2`.
+
+# Arquivos utilizados
+
+Nesta aula serão usados os seguintes arquivos:
+  
+  -   `experiment_2022.csv`
+-   `experiment_2023.csv`
+-   `experiment_2024.csv`
+-   `location_info.csv`
+
+Todos os arquivos devem estar salvos na mesma pasta do documento Quarto, ou em uma pasta cujo caminho seja informado corretamente no código.
+
+# 1. Carregar os pacotes
+
+Começamos carregando os pacotes que serão usados ao longo da análise. O `tidyverse` reúne funções importantes para importação, transformação e visualização de dados. O pacote `broom` será útil para organizar a saída do teste estatístico em formato de tabela.
+
+```{r}
+library(tidyverse)
+library(broom)
+```
+
+# 2. Importar os arquivos anuais
+
+Cada arquivo representa um ano de experimento. A primeira etapa é importar cada um separadamente e armazená-los em objetos com nomes claros e sequenciais.
+
+```{r}
+dados_2022_bruto <- read_csv("experiment_2022.csv")
+dados_2023_bruto <- read_csv("experiment_2023.csv")
+dados_2024_bruto <- read_csv("experiment_2024.csv")
+```
+
+# 3. Inspecionar a estrutura das tabelas
+
+Antes de unir arquivos, precisamos entender como eles estão organizados. A função `glimpse()` mostra os nomes das colunas, os tipos de variáveis e uma prévia dos valores.
+
+```{r}
+glimpse(dados_2022_bruto)
+glimpse(dados_2023_bruto)
+glimpse(dados_2024_bruto)
+```
+
+Ao observar a estrutura das tabelas, note que algumas colunas equivalentes têm nomes diferentes entre anos. Esse é um dos problemas mais comuns em dados reais. Por exemplo, a mesma informação pode aparecer como:
+  
+  -   `year` em um arquivo e `Year` em outro;
+-   `location` em um arquivo e `site` em outro;
+-   `yield_kg_ha` em um arquivo e `yield` em outro.
+
+Além disso, as categorias de tratamento também podem variar. Em um ano, o tratamento pode aparecer como `"Control"` e `"Fungicide"`, enquanto em outro aparece abreviado como `"ctrl"` e `"fung"`.
+
+# 4. Padronizar o arquivo de 2022
+
+O arquivo de 2022 já está próximo do formato final desejado, mas vamos manter uma convenção única de nomes para que os três anos possam ser combinados sem dificuldade.
+
+```{r}
+dados_2022 <- dados_2022_bruto |>
+  rename(
+    Year = year,
+    site = location,
+    cult = cultivar,
+    rep = block,
+    trt = treatment,
+    sev = severity,
+    yld = yield_kg_ha
+  )
+```
+
+Vamos conferir o resultado.
+
+```{r}
+glimpse(dados_2022)
+```
+
+# 5. Padronizar o arquivo de 2023
+
+No arquivo de 2023, alguns nomes já estão próximos do padrão que queremos, mas ainda precisamos harmonizar as categorias de tratamento e os nomes dos locais.
+
+```{r}
+dados_2023 <- dados_2023_bruto |>
+  rename(
+    yld = yield
+  ) |>
+  mutate(
+    trt = case_match(
+      trt,
+      "ctrl" ~ "Control",
+      "fung" ~ "Fungicide",
+      .default = trt
+    ),
+    site = case_match(
+      site,
+      "Uberlândia" ~ "Uberlandia",
+      .default = site
+    )
+  )
+```
+
+```{r}
+glimpse(dados_2023)
+```
+
+# 6. Padronizar o arquivo de 2024
+
+O arquivo de 2024 apresenta dois problemas adicionais: o ano precisa ser criado como coluna, e a variável de severidade aparece com o nome `severity_pct`. Também existem espaços extras em algumas categorias de tratamento, o que pode causar problemas posteriores.
+
+```{r}
+dados_2024 <- dados_2024_bruto |>
+  mutate(Year = 2024) |>
+  rename(
+    site = location,
+    cult = cultivar,
+    rep = block,
+    trt = treatment,
+    sev = severity_pct,
+    yld = yield_kg_ha
+  ) |>
+  mutate(
+    trt = str_trim(trt),
+    site = case_match(
+      site,
+      "Viçosa" ~ "Vicosa",
+      "Uberlândia" ~ "Uberlandia",
+      .default = site
+    )
+  ) |>
+  select(Year, site, cult, rep, trt, sev, yld)
+```
+
+```{r}
+glimpse(dados_2024)
+```
+
+# 7. Conferir se os nomes das colunas agora coincidem
+
+Antes de empilhar os arquivos, é importante verificar se os três objetos têm exatamente a mesma estrutura.
+
+```{r}
+names(dados_2022)
+names(dados_2023)
+names(dados_2024)
+```
+
+Se os nomes coincidirem e estiverem na mesma ordem, podemos unir as tabelas com segurança.
+
+# 8. Unir os três anos em uma única tabela
+
+A função `bind_rows()` empilha tabelas por linhas. Ela é usada quando queremos juntar observações de anos, locais ou experimentos diferentes, desde que as colunas representem as mesmas variáveis.
+
+```{r}
+dados_empilhados <- bind_rows(dados_2022, dados_2023, dados_2024)
+```
+
+```{r}
+glimpse(dados_empilhados)
+```
+
+# 9. Padronizar a tabela empilhada em nomes mais descritivos
+
+Até aqui usamos nomes curtos para facilitar a padronização entre anos. Agora que os dados já estão unidos, podemos renomear as colunas para uma forma mais clara e didática.
+
+```{r}
+dados_experimento <- dados_empilhados |>
+  rename(
+    year = Year,
+    location = site,
+    cultivar = cult,
+    block = rep,
+    treatment = trt,
+    severity = sev,
+    yield_kg_ha = yld
+  )
+```
+
+```{r}
+glimpse(dados_experimento)
+```
+
+# 10. Adicionar coordenadas geográficas com `left_join()`
+
+Em muitas análises, precisamos enriquecer uma base principal com informações auxiliares. Isso é feito com a família `join`. Neste exemplo, vamos acrescentar coordenadas geográficas aos locais do experimento.
+
+Primeiro, importamos a tabela auxiliar.
+
+```{r}
+coordenadas_locais <- read_csv("location_info.csv")
+coordenadas_locais
+```
+
+Agora usamos `left_join()`. Essa função mantém todas as linhas da tabela principal e acrescenta colunas da tabela auxiliar quando existe correspondência entre as chaves informadas.
+
+```{r}
+dados_experimento_geo <- dados_experimento |>
+  left_join(coordenadas_locais, by = c("location" = "location"))
+```
+
+```{r}
+glimpse(dados_experimento_geo)
+```
+
+# 11. Conferir valores ausentes
+
+Após unir tabelas, é sempre bom verificar se ainda existem valores ausentes nas variáveis principais. Isso ajuda a decidir como resumir e analisar os dados.
+
+```{r}
+dados_experimento_geo |>
+  summarise(
+    n_na_severity = sum(is.na(severity)),
+    n_na_yield = sum(is.na(yield_kg_ha)),
+    n_na_state = sum(is.na(state)),
+    n_na_altitude = sum(is.na(altitude_m))
+  )
+```
+
+# 12. Resumos descritivos iniciais
+
+Antes de qualquer teste inferencial, é recomendável resumir os dados. Vamos calcular as médias de severidade e produtividade por tratamento e por ano.
+
+```{r}
+resumo_tratamento_ano <- dados_experimento_geo |>
+  group_by(year, treatment) |>
+  summarise(
+    media_severity = mean(severity, na.rm = TRUE),
+    media_yield = mean(yield_kg_ha, na.rm = TRUE),
+    n = n(),
+    .groups = "drop"
+  )
+
+resumo_tratamento_ano
+```
+
+Também podemos resumir apenas por tratamento, considerando todos os anos em conjunto.
+
+```{r}
+resumo_tratamento <- dados_experimento_geo |>
+  group_by(treatment) |>
+  summarise(
+    media_severity = mean(severity, na.rm = TRUE),
+    dp_severity = sd(severity, na.rm = TRUE),
+    media_yield = mean(yield_kg_ha, na.rm = TRUE),
+    dp_yield = sd(yield_kg_ha, na.rm = TRUE),
+    n = n(),
+    .groups = "drop"
+  )
+
+resumo_tratamento
+```
+
+# 13. Comparação de médias com o teste *t*
+
+Agora vamos comparar as médias de produtividade entre os dois tratamentos: `Control` e `Fungicide`.
+
+O teste *t* para duas amostras independentes é um procedimento inferencial usado para avaliar se a diferença entre duas médias amostrais é grande o suficiente para sugerir que as médias populacionais também diferem.
+
+## 13.1 Hipóteses do teste
+
+Ao aplicar o teste *t*, formulamos duas hipóteses:
+  
+  -   **Hipótese nula** ($H_0$): as médias populacionais são iguais\
+$$H_0 : \mu_1 = \mu_2$$
+  
+  -   **Hipótese alternativa** ($H_1$): as médias populacionais são diferentes\
+$$H_1 : \mu_1 \neq \mu_2$$
+  
+  No nosso exemplo, queremos comparar a produtividade média entre os tratamentos `Control` e `Fungicide`.
+
+## 13.2 Estatística do teste
+
+A estatística *t* compara a diferença observada entre médias com a variabilidade dessa diferença.
+
+Na forma clássica do teste com variâncias assumidas como iguais, a estatística é dada por:
+  
+  $$
+  t = \frac{\bar{x}_1 - \bar{x}_2}{s_p\sqrt{\frac{1}{n_1} + \frac{1}{n_2}}}
+$$
+  
+  em que:
+  
+  -   $\bar{x}_1$ e $\bar{x}_2$ são as médias amostrais;
+-   $n_1$ e $n_2$ são os tamanhos das amostras;
+-   $s_p$ é o desvio-padrão combinado (*pooled standard deviation*), calculado por:
+  
+  $$
+  s_p = \sqrt{\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}}
+$$
+  
+  em que:
+  
+  -   $s_1^2$ e $s_2^2$ são as variâncias amostrais dos dois grupos.
+
+Na prática, o R calcula automaticamente a estatística *t* e o *p*-valor quando usamos `t.test()`. O mais importante neste momento é entender a lógica: quanto maior a diferença entre médias em relação à variabilidade dos dados, mais extremo tende a ser o valor de *t*.
+
+## 13.3 Ajustar o teste no R
+
+Vamos aplicar o teste *t* à produtividade.
+
+```{r}
+teste_t_yield <- t.test(yield_kg_ha ~ treatment, data = dados_experimento_geo)
+teste_t_yield
+```
+
+A saída mostra, entre outras informações:
+  
+  -   o valor da estatística *t*;
+-   os graus de liberdade;
+-   o *p*-valor;
+-   as médias estimadas dos dois grupos.
+
+Também podemos organizar essa saída em formato de tabela com `broom::tidy()`.
+
+```{r}
+resultado_tidy <- tidy(teste_t_yield)
+resultado_tidy
+```
+
+# 14. Interpretar o valor de *t* e o *p*-valor
+
+O valor de *t* indica quantos “erros-padrão” separam a diferença observada entre médias do valor esperado sob a hipótese nula. Quanto mais distante de zero estiver esse valor, maior a evidência contra $H_0$.
+
+O *p*-valor representa a probabilidade de observar um valor de *t* tão extremo quanto o obtido, ou mais extremo, caso a hipótese nula seja verdadeira.
+
+Se o *p*-valor for pequeno, consideramos que os dados fornecem evidência para rejeitar a hipótese nula.
+
+Vamos extrair os valores de interesse para usar nos gráficos seguintes.
+
+```{r}
+t_observado <- unname(teste_t_yield$statistic)
+gl_observado <- unname(teste_t_yield$parameter)
+p_observado <- unname(teste_t_yield$p.value)
+
+t_observado
+gl_observado
+p_observado
+```
+
+# 15. Visualizar a estatística *t* na distribuição do teste
+
+Uma forma didática de entender o teste é visualizar onde o valor observado de *t* cai na distribuição *t* de Student sob a hipótese nula.
+
+No gráfico abaixo:
+  
+  -   a curva representa a distribuição *t*;
+-   a linha vertical mostra o valor observado de *t*;
+-   a área sombreada representa a região associada ao *p*-valor.
+
+```{r}
+limite_x <- max(4, abs(t_observado) + 1)
+
+ggplot(data.frame(x = c(-limite_x, limite_x)), aes(x)) +
+  stat_function(
+    fun = dt,
+    args = list(df = gl_observado),
+    linewidth = 1
+  ) +
+  geom_vline(
+    xintercept = c(-abs(t_observado), abs(t_observado)),
+    colour = "red",
+    linetype = "dashed",
+    linewidth = 0.8
+  ) +
+  stat_function(
+    fun = dt,
+    args = list(df = gl_observado),
+    xlim = c(-limite_x, -abs(t_observado)),
+    geom = "area",
+    fill = "red",
+    alpha = 0.25
+  ) +
+  stat_function(
+    fun = dt,
+    args = list(df = gl_observado),
+    xlim = c(abs(t_observado), limite_x),
+    geom = "area",
+    fill = "red",
+    alpha = 0.25
+  ) +
+  annotate(
+    "text",
+    x = 0,
+    y = 0.35,
+    label = "Distribuição t sob H0",
+    fontface = "italic"
+  ) +
+  annotate(
+    "text",
+    x = 0,
+    y = 0.30,
+    label = paste0("t = ", round(t_observado, 2),
+                   "   |   p = ", signif(p_observado, 3))
+  ) +
+  labs(
+    title = "Visualização da estatística t e do p-valor",
+    x = "Valores de t",
+    y = "Densidade"
+  ) +
+  theme_minimal()
+```
+
+# 16. Construir um gráfico de produtividade anotado com o teste *t*
+
+Agora que já ajustamos e interpretamos o teste, podemos construir um gráfico de produtividade por tratamento e acrescentar o resultado estatístico ao painel.
+
+A ordem importa: primeiro fazemos a análise, depois usamos seu resultado para enriquecer a visualização.
+
+```{r}
+rotulo_teste <- paste0(
+  "t = ", round(t_observado, 2), "\n",
+  "p = ", signif(p_observado, 3)
+)
+
+grafico_yield <- dados_experimento_geo |>
+  ggplot(aes(x = treatment, y = yield_kg_ha, color = treatment)) +
+  geom_boxplot(outlier.shape = NA, linewidth = 0.6) +
+  geom_jitter(width = 0.08, alpha = 0.6, size = 2) +
+  annotate(
+    geom = "text",
+    x = 1.5,
+    y = max(dados_experimento_geo$yield_kg_ha, na.rm = TRUE) + 80,
+    label = rotulo_teste
+  ) +
+  labs(
+    x = "Tratamento",
+    y = "Produtividade (kg/ha)",
+    title = "Produtividade por tratamento"
+  ) +
+  theme_classic() +
+  theme(legend.position = "none")
+
+grafico_yield
+```
+
+Se desejado, o gráfico pode ser salvo em arquivo.
+
+```{r}
+ggsave(
+  "grafico_produtividade_tratamento.png",
+  grafico_yield,
+  width = 6,
+  height = 5,
+  bg = "white"
+)
+```
+
+# 17. Considerações finais
+
+Esta aula mostrou um fluxo muito comum em análise de dados experimentais:
+  
+  1.  importar múltiplos arquivos;
+2.  inspecionar a estrutura das tabelas;
+3.  padronizar nomes e categorias;
+4.  unir arquivos anuais;
+5.  adicionar informações auxiliares com `join`;
+6.  resumir os dados de forma descritiva;
+7.  comparar tratamentos com um teste inferencial;
+8.  representar a análise em um gráfico final.
+
+Esse fluxo reforça uma ideia importante: uma boa análise não começa no teste estatístico. Ela começa na organização da base e no entendimento claro do que cada variável representa.
+
+# 18. Exercícios sugeridos
+
+1.  Calcule a severidade média por local e por tratamento.
+2.  Construa um gráfico de severidade por tratamento.
+3.  Aplique um teste *t* para comparar a severidade média entre os tratamentos.
+4.  Verifique se o resultado do teste para severidade é consistente com o gráfico.
+5.  Modifique o código do gráfico final para anotar o teste da severidade em vez do teste da produtividade.

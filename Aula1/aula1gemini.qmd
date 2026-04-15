@@ -1,0 +1,88 @@
+---
+title: "Untitled"
+format: html
+editor: visual
+---
+
+---
+title: "Aula 1: Introdução à Experimentação e R"
+subtitle: "Conceitos Básicos, Manipulação de Dados e Testes Estatísticos"
+format: html
+editor: visual
+---
+
+## Tópico 1: Apresentação da Disciplina
+
+Nesta primeira aula, vamos introduzir os **conceitos em experimentação**. Na pesquisa (especialmente nas ciências agrárias e biológicas), nós aplicamos diferentes "tratamentos" a uma população para entender como ela reage.
+
+*(Nota: Adicione aqui a imagem ilustrativa da sua aula usando o comando nativo do Quarto ou Markdown)* ![](agricultura-no-brasil-produtor-trabalhando-na-lavoura.webp)
+
+Para analisar esses dados, usaremos a linguagem de programação R. Vamos começar com o básico: operações matemáticas e criação de variáveis. Em R, usamos o símbolo `<-` para "guardar" um valor dentro de um nome (variável).
+
+```{r}
+#| label: operacoes-basicas
+# Atribuindo o valor 1 à variável 'a' e o valor 2 à variável 'b'
+a <- 1
+b <- 2
+
+# Somando as duas variáveis
+a + b
+```
+
+#\| label: criação de dados
+
+```{r}
+# Criando um vetor com o número das plantas (de 1 a 8)
+planta <- seq(1:8) # Equivalente a escrever c(1,2,3,4,5,6,7,8)
+
+# Criando um vetor indicando qual tratamento cada planta recebeu
+tratamento <- c("Controle", "Controle", "Controle", "Controle", 
+                "Fungicida", "Fungicida", "Fungicida", "Fungicida")
+
+# Criando um vetor com os valores da severidade da doença (%)
+severidade <- c(42, 38, 45, 40, 12, 18, 15, 10)
+
+# Unindo os vetores em uma única tabela
+dados <- data.frame(planta, tratamento, severidade)
+
+# Visualizando a tabela no R
+dados
+```
+
+#\| label: graficos
+
+```{r}
+# Gráfico 1: Pontos simples com formatação
+library(ggplot2)
+ggplot(dados, aes(x = tratamento, y = severidade)) +
+  geom_point(color = "blue", size = 3, shape = 2) + # Adiciona os pontos
+  ylim(0, 50) +                                     # Define os limites do eixo Y
+  theme_classic(base_size = 14) +                   # Deixa o gráfico mais "limpo"
+  labs(x = "Tratamento", y = "Severidade (%)")      # Arruma os nomes dos eixos
+```
+
+# Gráfico 2: Usando Jitter
+
+# O geom_jitter "espalha" um pouco os pontos para os lados.
+
+Isso é excelente quando temos muitos pontos com o mesmo valor que ficam sobrepostos.
+
+```{r}
+ggplot(dados, aes(x = tratamento, y = severidade)) +
+  geom_jitter(width = 0.2, size = 3, color = "darkred") + 
+  ylim(0, 50) +
+  theme_classic(base_size = 14) +
+  labs(title = "Dispersão da Severidade por Tratamento",
+       x = "Tratamento", 
+       y = "Severidade (%)")
+```
+
+#\| label: teste-estatistico
+
+```{r}
+# Realizando o Teste T
+resultado_teste <- t.test(severidade ~ tratamento, data = dados, var.equal = TRUE)
+
+# Visualizando o resultado do teste
+resultado_teste
+```

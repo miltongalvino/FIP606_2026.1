@@ -1,0 +1,14 @@
+"0","rename
+"
+"1","function (.data, ...) 
+"
+"1","{
+"
+"1","    UseMethod(""rename"")
+"
+"1","}
+"
+"1","<bytecode: 0x000001131d1d0180>
+"
+"1","<environment: namespace:dplyr>
+"

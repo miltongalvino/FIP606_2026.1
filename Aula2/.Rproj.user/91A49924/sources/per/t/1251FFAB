@@ -1,0 +1,28 @@
+{
+    "id": "1251FFAB",
+    "path": null,
+    "project_path": null,
+    "type": "object_explorer",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1774103622618.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "id": "bf0bdb8474ac48be8a532c1630c8695e",
+        "name": "lista_dados",
+        "title": "lista_dados",
+        "language": "R",
+        "source_window_id": "",
+        "Source": "Source"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 0,
+    "encoding": "",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1774103622618,
+    "read_only": false,
+    "read_only_alternatives": []
+}

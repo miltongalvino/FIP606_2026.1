@@ -1,0 +1,1 @@
+{"frames":[{"func":"left_join(dados_experimento, coordenadas_locais, by = c(location = \"location\"))","file":"","line_number":0,"end_line_number":0,"character_number":0,"end_character_number":0}],"message":"Erro: objeto 'dados_experimento' não encontrado\n"}

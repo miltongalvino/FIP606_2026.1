@@ -1,0 +1,20 @@
+"0","grafico_yield <- dados_experimento_geo |>
+  ggplot(aes(x = treatment, y = yield_kg_ha, color = treatment)) +
+  geom_boxplot(outlier.shape = NA, linewidth = 0.6) +
+  geom_jitter(width = 0.08, alpha = 0.6, size = 2) +
+  annotate(
+    geom = ""text"",
+    x = 1.5,
+    y = max(dados_experimento_geo$yield_kg_ha, na.rm = TRUE) + 80,
+    label = rotulo_teste
+  ) +
+  labs(
+    x = ""Tratamento"",
+    y = ""Produtividade (kg/ha)"",
+    title = ""Produtividade por tratamento""
+  ) +
+  theme_classic() +
+  theme(legend.position = ""none"")
+"
+"2","Erro: objeto 'rotulo_teste' não encontrado
+"

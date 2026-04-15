@@ -1,0 +1,223 @@
+---
+title: "Aula4"
+Author: Milton Galvino
+format: html
+editor: visual
+editor_options: 
+  chunk_output_type: console
+---
+
+#Ler os dados
+
+
+```{r}
+library (tidyverse)
+library (readxl)
+
+dados <- read_excel ("dados_diversos.xlsx", "curve")
+
+dados
+```
+
+```{r}
+
+library(ggplot2)
+library (epifitter)
+
+dados |>
+  group_by (Irrigation, day) |> 
+  summarise (mean_sev = mean(severity*100),
+            sd_sev = sd(severity*100)) |> 
+  ggplot(aes(day, mean_sev, group = Irrigation, 
+             color = Irrigation))+
+  geom_area(alpha = 0.2, position = "identity")+
+  geom_point()+
+  geom_line()+
+  geom_errorbar(aes(ymin=mean_sev-sd_sev,
+                ymax=mean_sev+sd_sev), width= 0.1)+
+  labs(x= "Dias", y="Severidade (%)")+
+  theme_classic()
+
+
+
+dados <- dados |> 
+  #calcula a estatística média e sd
+  group_by(Irrigation,rep) |> 
+  summarise(audpc = AUDPC (day, severity)) |> 
+  group_by(Irrigation) |>  
+  summarise(mean_audpc = mean(audpc),
+            sd_audpc = sd(audpc)) |> 
+  #faz o plot
+  ggplot(aes(Irrigation, mean_audpc))+
+  geom_col(width=0.5,)+
+  geom_point()+
+  geom_errorbar(aes(ymin= mean_audpc - sd_audpc,
+                    ymax = mean_audpc + sd_audpc),
+                width=0.1)+
+  ylim(0,20)+
+  labs (x="Irrigação", y= "Média da AUDPC")+
+  theme_classic()
+
+
+```
+
+```{r}
+Para alterar as suas barras de erro de Desvio Padrão (SD) para Intervalo de Confiança (IC) (normalmente usamos o IC de 95%), precisamos de fazer um pequeno cálculo adicional dentro do seu summarise().
+
+O Intervalo de Confiança é calculado usando o Erro Padrão (Desvio Padrão dividido pela raiz quadrada do número de repetições) multiplicado pelo valor t da distribuição (que nos dá os 95% de confiança).
+
+Aqui está o seu código atualizado e comentado:
+
+R
+dados |> 
+  # 1. Calcula a AUDPC por parcela (Irrigação x Repetição)
+  group_by(Irrigation, rep) |> 
+  summarise(audpc = AUDPC(day, severity), .groups = "drop") |> 
+  
+  # 2. Calcula média, N, SD e o Intervalo de Confiança (95%)
+  group_by(Irrigation) |>  
+  summarise(
+    mean_audpc = mean(audpc),
+    sd_audpc = sd(audpc),
+    n_rep = n(),  # Conta quantas repetições (rep) existem por tratamento
+    
+    # Calcula a margem de erro do IC 95%
+    # qt(0.975, df = n_rep - 1) é o valor t. 
+    # (sd_audpc / sqrt(n_rep)) é o Erro Padrão.
+    erro_ic = qt(0.975, df = n_rep - 1) * (sd_audpc / sqrt(n_rep)),
+    
+    .groups = "drop"
+  ) |> 
+  
+  # 3. Faz o plot
+  ggplot(aes(Irrigation, mean_audpc)) +
+  geom_col(width = 0.5, fill = "lightgray", color = "black") + # Adicionei borda preta e cor para destacar o point
+  geom_point(size = 3) +
+  # Agora usamos o erro_ic para definir os limites da barra
+  geom_errorbar(aes(ymin = mean_audpc - erro_ic,
+                    ymax = mean_audpc + erro_ic),
+                width = 0.1) +
+  ylim(0, 20) +
+  labs(x = "Irrigação", y = "Média da AUDPC (IC 95%)") +
+  theme_get()
+```
+
+```{r}
+library(rstatix)
+dados_audpc <- dados |> 
+  group_by(Irrigation, rep) |> 
+  summarise(audpc=AUDPC(day, severity))
+  
+ t.test(audpc ~ Irrigation, data = dados_audpc)
+
+```
+
+```{r}
+escala <-read_excel("dados_diversos.xlsx", "escala")
+
+head(escala)
+
+escala |> ggplot(aes(assessment,acuracia))+
+  geom_boxplot(outlier.color = NA)+
+  geom_jitter(width = 0.1)+
+  ylim(0,1)
+
+escala_wide<- escala |> 
+  select(rater, assessment, acuracia) |> 
+  pivot_wider(
+    names_from= assessment,
+    values_from= acuracia
+  )
+
+t.test(escala_wide$Unaided,
+       escala_wide$Aided1,
+       paired=TRUE)
+  
+qqnorm(escala_wide$Unaided)
+qqline(escala_wide$Unaided)
+shapiro.test(escala_wide$Unaided)
+
+#	Shapiro-Wilk normality test
+#data:  escala_wide$Unaided
+#W = 0.77356, p-value = 0.00691         p valor menor que 0.05 quer dizer                                            que os valores não são normais.
+
+  
+qqnorm(escala_wide$Aided1)
+qqline(escala_wide$Aided1)
+shapiro.test(escala_wide$Aided1)
+
+
+#equivalente não paramêtrico ao T-teste
+wilcox.test(escala_wide$Aided1,
+       escala_wide$Unaided,
+       paired=TRUE)
+
+#para fzr o teste t paramêtrico: se a variancia não for homogenea dá pra corrigir no teste T, mas se a normalidade  nao for |> tem que  usar um teste não paramêtrico
+
+```
+
+```{r}
+
+micelial <- read_excel("dados_diversos.xlsx", 
+                   "micelial")
+count(micelial, especie)
+
+set.seed(2)
+micelial |> ggplot(aes(reorder(especie,tcm),tcm))+
+  geom_boxplot(outlier.color = NA)+
+  geom_jitter(width=0.2)+
+  coord_flip()   #pra inverter o eixo e deixar o x mais espaçado pra escrever mais
+
+
+m1 <- aov(tcm~ especie, data= micelial)
+
+m1
+
+anova(m1)
+
+m2 <- lm(tcm~ especie, data= micelial)
+
+m2
+
+anova(m2)
+
+#testa normalidade
+hist(m2$residuals)
+qqnorm(m2$residuals)
+qqline(m2$residuals)
+shapiro.test(m2$residuals)
+#teste homocedasticidade
+bartlett.test(tcm~especie, data=micelial)
+```
+
+```{r}
+install.packages("emmeans")
+install.packages("multcomp")
+
+library(emmeans)
+
+medias_m2 <- emmeans(m2, ~especie)
+medias_m2
+
+library(multcomp)
+medias_m2b <- cld(medias_m2, Letters=letters)
+
+library(tidyverse)
+library(ggplot2)
+
+
+medias_m2b |> 
+  ggplot(aes(reorder(especie, emmean), emmean, label=.group))+
+  geom_point()+
+  geom_errorbar(aes(ymax = upper.CL,
+                    ymin = lower.CL),
+                width=0.1)+
+  ylim(0,2)+
+  coord_flip()+
+  labs(x="Isolado", y= "Taxa de crescimento micelial (mm/dia)")+
+  geom_text(hjust=0, nudge_y= 0.12, size=4)
+  
+
+
+```
+

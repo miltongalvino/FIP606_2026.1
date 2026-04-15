@@ -1,0 +1,424 @@
+---
+title: "Aula 5 — ANOVA, Diagnóstico de Pressupostos, Kruskal-Wallis e GLM de Poisson"
+format:
+  html:
+    toc: true
+    toc-depth: 3
+    number-sections: true
+editor: visual
+editor_options:
+  chunk_output_type: console
+---
+
+# Apresentação
+
+Esta apostila organiza, comenta e expande o exemplo da base `InsectSprays`, com foco em comparação de médias para dados de contagem. O objetivo é mostrar, de forma sequencial, como:
+
+1.  explorar os dados;
+2.  ajustar uma ANOVA de um fator;
+3.  verificar pressupostos do modelo;
+4.  considerar alternativas quando os pressupostos não são bem atendidos;
+5.  realizar comparações múltiplas;
+6.  ajustar um modelo linear generalizado para contagens.
+
+Ao longo do texto, as fórmulas estatísticas são apresentadas para conectar a prática computacional aos fundamentos inferenciais.
+
+# Carregamento dos dados
+
+Usaremos a base `InsectSprays`, já disponível no R. Ela registra a contagem de insetos sobreviventes (`count`) em parcelas tratadas com diferentes pulverizações (`spray`).
+
+```{r}
+library(tidyverse)
+
+insetos <- InsectSprays      #atribuir ao objeto "insetos" o dataframe "InsectSprays"
+
+glimpse(insetos)
+head(insetos)
+```
+
+# Exploração inicial dos dados
+
+Antes de ajustar qualquer modelo, é importante visualizar a distribuição das respostas em cada tratamento. Isso permite observar diferenças aparentes entre grupos, dispersão, assimetria e possíveis valores extremos.
+
+```{r}
+insetos |>
+  ggplot(aes(x = spray, y = count)) +    #A partir do objeto insetos formar um gráfico relacionando (spray e contagem)
+  geom_boxplot(outlier.colour = NA) +    #Adicionar o box plot sem apresentar os outliers
+  geom_jitter(width = 0.1, alpha = 0.7) +#Adicionar pontos de forma espalhadas com espaçamento de 0.1
+  theme_classic() +                      #tema clássico
+  labs(                                  
+    x = "Tratamento (spray)",                 #Adicionar legenda no eixo x
+    y = "Número de insetos sobreviventes"     #Adicionar legenda no eixo x
+  )
+```
+
+Também é útil obter estatísticas descritivas por grupo.
+
+```{r}
+spraystats <-insetos |>                  #atribuir ao objeto spraystats, a partir do objeto insetos realizar:
+  group_by(spray) |>                     #Seleção das colunas "Spray" e realizar:
+  summarise(                             #Adicionar colunas com base em:
+    n = n(),                                   #coluna N será da função de quantidade de observações
+    media = mean(count),                       #coluna média será da função de média das observações contadas
+    desvio_padrao = sd(count),                 #coluna desvio_padrão será da função do desvio padrão
+    erro_padrao = sd(count) / sqrt(n)          #coluna erro_padrão será os valores do desvio padrão divididos pelo                                                        quadrado de n
+  )
+```
+
+# ANOVA de um fator
+
+## Ideia do modelo
+
+A ANOVA de um fator testa a hipótese de que todas as médias populacionais dos grupos são iguais.
+
+A hipótese nula é:
+
+$$
+H_0: \mu_A = \mu_B = \mu_C = \mu_D = \mu_E = \mu_F
+$$
+
+A hipótese alternativa é:
+
+$$
+H_1: \text{pelo menos uma média difere das demais}
+$$
+
+O modelo linear da ANOVA pode ser escrito como:
+
+$$
+Y_{ij} = \mu + \tau_i + \varepsilon_{ij}
+$$
+
+em que:
+
+-   $Y_{ij}$ é a observação $j$ no tratamento $i$;
+-   $\mu$ é a média geral;
+-   $\tau_i$ é o efeito do tratamento $i$;
+-   $\varepsilon_{ij}$ é o erro aleatório associado à observação.
+
+Assume-se que:
+
+$$
+\varepsilon_{ij} \sim N(0, \sigma^2)
+$$
+
+ou seja, os erros são independentes, normalmente distribuídos e com variância comum.
+
+## Decomposição da variabilidade
+
+A ANOVA particiona a soma de quadrados total em duas partes:
+
+$$
+SQ_{Total} = SQ_{Tratamentos} + SQ_{Resíduo}
+$$
+
+ou, de forma equivalente,
+
+$$
+SS_T = SS_{Trat} + SS_E
+$$
+
+A estatística de teste é:
+
+$$
+F = \frac{QM_{Tratamentos}}{QM_{Resíduo}}
+$$
+
+em que:
+
+$$
+QM_{Tratamentos} = \frac{SQ_{Tratamentos}}{g - 1}
+$$
+
+$$
+QM_{Resíduo} = \frac{SQ_{Resíduo}}{N - g}
+$$
+
+com $g$ representando o número de grupos e $N$ o número total de observações.
+
+Quando $H_0$ é verdadeira, espera-se que $F$ seja próximo de 1. Valores muito maiores que 1 indicam evidência de diferença entre médias.
+
+## Ajuste do modelo
+
+```{r}
+m1 <- lm(count ~ spray, data = insetos)   #atribuir ao objeto m1 o modelo linear que relaciona count em função de spray utilizando os dados do objeto insetos
+
+m1
+summary(m1)              
+anova(m1)                   #Aplicar anova no objeto m1
+```
+
+# Diagnóstico dos pressupostos
+
+A interpretação da ANOVA depende da avaliação dos resíduos do modelo. Em termos práticos, queremos verificar se os resíduos apresentam distribuição aproximadamente normal e variância aproximadamente constante entre tratamentos.
+
+## Resíduos do modelo
+
+Os resíduos são calculados como:
+
+$$
+e_{ij} = y_{ij} - \hat{y}_{ij}
+$$
+
+onde $y_{ij}$ é o valor observado e $\hat{y}_{ij}$ é o valor ajustado pelo modelo.
+
+## Histograma dos resíduos
+
+Verificar visualmente a normalidade dos resíduos
+
+```{r}
+hist(m1$residuals,      #usar a função histograma utilizando o objeto m1 e o valor                         "residuals" dele 
+     main = "Histograma dos resíduos do modelo m1",
+     xlab = "Resíduos")
+```
+
+## Teste de normalidade de Shapiro-Wilk
+
+O teste de Shapiro-Wilk avalia a hipótese:
+
+$$H_0: \text{os resíduos seguem distribuição normal}
+$$
+
+```{r}
+shapiro.test(m1$residuals) #realizar o teste de Shapiro-Wilk utilizando o objeto m1                             e o valor "residuals" dele 
+```
+
+## Teste de homogeneidade de variâncias
+
+O teste de Bartlett avalia:
+
+$$
+H_0: \sigma_A^2 = \sigma_B^2 = \cdots = \sigma_F^2
+$$
+
+```{r}
+bartlett.test(count ~ spray, data = insetos) #realizar o teste de bartlett relacionando count em função de spray, com os dados de insetos
+```
+
+## Funções auxiliares para diagnóstico
+
+O pacote `performance` é mais direto e prático para quando se quer avaliar a normalidade dos resíduos e a homocedasticidade.
+
+```{r}
+library(performance)       #Carregar pacote performance
+
+check_normality(m1)               #checar normalidade  
+check_heteroscedasticity(m1)      #checar heterocedasticidade
+```
+
+## Simulação de resíduos
+
+O pacote `DHARMa` oferece uma visualização bastante útil do comportamento dos resíduos simulados.
+
+Lembrando que falta de variância homogênea é pior que falta de normalidade
+
+```{r}
+library(DHARMa)         #Carregar o pacote DHARMa
+
+plot(simulateResiduals(m1))
+```
+
+# Alternativa não paramétrica: teste de Kruskal-Wallis
+
+Quando os pressupostos da ANOVA não são adequadamente atendidos, uma alternativa é o teste de Kruskal-Wallis. Esse teste compara grupos com base nos postos, e não nas médias originais.
+
+A hipótese nula continua sendo a de ausência de diferença sistemática entre os grupos.
+
+```{r}
+kruskal.test(count ~ spray, data = insetos)   #Realizar o teste de Kruskal-Wallis relacionando count em função de spray com os dados de "insetos"
+```
+
+Também podemos usar uma função que já fornece agrupamentos de comparação.
+
+```{r}
+library(agricolae)
+
+k <- kruskal(insetos$count, insetos$spray)
+k
+```
+
+# Transformação da variável resposta
+
+Para dados de contagem, uma transformação simples e clássica é a raiz quadrada:
+
+$$
+Y' = \sqrt{Y}
+$$
+
+Essa transformação pode reduzir assimetria e estabilizar a variância em algumas situações.
+
+Primeiro criamos uma nova coluna com a resposta transformada.
+
+```{r}
+insetos2 <- insetos |>                #atribuir ao objeto insetos2 a partir do                                             objeto insetos:
+  mutate(count_sqrt = sqrt(count))    #com a função mutate: adicionar uma coluna                                          com o nome count_square, a partir da raiz                                         quadrada dos valores da coluna count   
+
+insetos2
+```
+
+## Visualização após transformação
+
+```{r}
+insetos2 |>
+  ggplot(aes(x = spray, y = count_sqrt)) + #
+  geom_boxplot(outlier.colour = NA) +
+  geom_jitter(width = 0.1, alpha = 0.7) +
+  theme_classic() +
+  labs(
+    x = "Tratamento (spray)",
+    y = expression(sqrt("Número de insetos sobreviventes"))
+  )
+```
+
+## Ajuste do modelo com dados transformados
+
+Repetir o modelo linear usado anteriormente, porém agora com os dados transformados
+
+```{r}
+m2 <- lm(count_sqrt ~ spray, data = insetos2) #atribuir ao objeto m2 o modelo linear que relaciona a raiz dos valores originais em função do spray utilizando os dados do objeto insetos 2
+
+m2
+summary(m2)
+anova(m2)
+```
+
+## Diagnóstico do modelo transformado
+
+```{r}
+hist(m2$residuals,               #formar um histograma a partir                                                     da coluna resíduos do objeto m2
+     main = "Histograma dos resíduos do modelo m2",
+     xlab = "Resíduos")
+
+shapiro.test(m2$residuals)
+bartlett.test(count_sqrt ~ spray, data = insetos2)
+
+check_normality(m2)
+check_heteroscedasticity(m2)
+
+
+plot(simulateResiduals(m2))
+```
+
+# Comparações múltiplas entre tratamentos
+
+Se a ANOVA indicar diferença significativa entre grupos, o passo seguinte é investigar quais pares de tratamentos diferem entre si.
+
+## Médias ajustadas
+
+O pacote `emmeans` calcula médias marginais estimadas, isto é, médias ajustadas com base no modelo.
+
+```{r}
+library(emmeans)
+
+medias_m1 <- emmeans(m1, ~ spray)
+medias_m1
+```
+
+## Teste de Tukey
+
+O procedimento de Tukey controla o erro do tipo I no conjunto das comparações par a par.
+
+```{r}
+pairs(medias_m1, adjust = "tukey")
+```
+
+## Agrupamento de letras
+
+Tratamentos que compartilham a mesma letra não diferem entre si ao nível de significância adotado.
+
+```{r}
+library(multcomp)
+
+cld(medias_m1, Letters = LETTERS)
+```
+
+# GLM para dados de contagem
+
+## Por que considerar um modelo linear generalizado?
+
+A resposta `count` é uma contagem. Em muitos casos, contagens são mais naturalmente modeladas por distribuições discretas, como a Poisson, em vez de uma distribuição normal.
+
+No modelo de Poisson, assume-se:
+
+$$
+Y_i \sim \text{Poisson}(\mu_i)
+$$
+
+com:
+
+$$
+P(Y_i = y_i) = \frac{e^{-\mu_i}\mu_i^{y_i}}{y_i!}
+$$
+
+Além disso, usa-se uma função de ligação logarítmica:
+
+$$
+\log(\mu_i) = \eta_i = \beta_0 + \beta_1 x_{i1} + \cdots + \beta_p x_{ip}
+$$
+
+No nosso caso, os preditores representam os tratamentos.
+
+## Ajuste do modelo de Poisson
+
+```{r}
+m3 <- glm(count ~ spray,        #atribuir ao objeto m3 a função de modelo linear generalizado, relacionando contagem e spray
+          family = poisson, #família poisson
+          data = insetos) #dados de insetos
+
+summary(m3)
+```
+
+## Comparações múltiplas no GLM
+
+No contexto do modelo de Poisson, as médias estimadas na escala da resposta representam contagens esperadas.
+
+```{r}
+df3 <- cld(
+  emmeans(m3, ~ spray, type = "response"),    
+  Letters = LETTERS
+)
+
+df3
+```
+
+## Gráfico das médias estimadas do GLM
+
+```{r}
+df3 |>
+  ggplot(aes(x = reorder(spray, -rate), y = rate, label = .group)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = asymp.LCL, ymax = asymp.UCL), width = 0.1) +
+  geom_text(aes(y = asymp.UCL), vjust = -0.5, size = 4) +
+  theme_classic() +
+  labs(
+    x = "Inseticida",
+    y = "Insetos vivos (contagem esperada)"
+  ) +
+  coord_flip()
+```
+
+# Interpretação geral do fluxo analítico
+
+Este exemplo mostra um fluxo bastante útil em análise de experimentos:
+
+1.  começar pela exploração gráfica dos dados;
+2.  ajustar um modelo simples e interpretável, como a ANOVA;
+3.  verificar cuidadosamente os pressupostos;
+4.  considerar alternativas, como transformação ou teste não paramétrico;
+5.  usar um GLM quando a natureza da variável resposta justificar uma modelagem mais apropriada.
+
+Em termos didáticos, a principal mensagem é que a escolha do método não deve ser automática. Ela depende do tipo de variável resposta, do comportamento dos resíduos e do objetivo inferencial.
+
+# Conclusões
+
+-   A ANOVA de um fator é uma ferramenta central para comparar médias entre grupos.
+-   Sua interpretação depende de pressupostos sobre os erros do modelo.
+-   O teste de Kruskal-Wallis oferece uma alternativa quando esses pressupostos falham.
+-   Transformações podem melhorar o comportamento dos dados, mas não substituem o raciocínio estatístico.
+-   Para contagens, o GLM com distribuição de Poisson costuma ser uma alternativa conceitualmente mais coerente.
+
+# Sessão de pacotes
+
+```{r}
+sessionInfo()
+```
