@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>aula4 – Aulas</title>
+<title>Aula4: Análise de Progresso de Doença e Comparações – Site</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -147,7 +147,7 @@ window.Quarto = {
     <a href="./index.html" class="navbar-brand navbar-brand-logo">
     </a>
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">Aulas</span>
+    <span class="navbar-title">Site</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -186,6 +186,21 @@ window.Quarto = {
 </i> 
 <span class="menu-text">Testes de médias</span></a>
   </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Aula6.html"> <i class="bi bi-ui-checks" role="img">
+</i> 
+<span class="menu-text">Análise Fatorial, Blocos Casualizados e Correlação</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Aula7.html"> <i class="bi bi-ui-checks" role="img">
+</i> 
+<span class="menu-text">Modelos Mistos e Parcelas Subdivididas (Split-Plot)</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./Aula8.html"> <i class="bi bi-ui-checks" role="img">
+</i> 
+<span class="menu-text">Modelos de Regressã</span></a>
+  </li>  
 </ul>
           </div> <!-- /navcollapse -->
             <div class="quarto-navbar-tools">
@@ -202,77 +217,22 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#aula-4-comparação-de-médias-teste-t-testes-não-paramétricos-e-anova" id="toc-aula-4-comparação-de-médias-teste-t-testes-não-paramétricos-e-anova" class="nav-link active" data-scroll-target="#aula-4-comparação-de-médias-teste-t-testes-não-paramétricos-e-anova">Aula 4 — comparação de médias: teste <em>t</em>, testes não paramétricos e ANOVA</a>
+  <li><a href="#importação-e-cálculo-de-área-abaixo-da-curva-de-progresso-da-doença-audpc" id="toc-importação-e-cálculo-de-área-abaixo-da-curva-de-progresso-da-doença-audpc" class="nav-link active" data-scroll-target="#importação-e-cálculo-de-área-abaixo-da-curva-de-progresso-da-doença-audpc">Importação e Cálculo de Área Abaixo da Curva de Progresso da Doença (AUDPC)</a>
   <ul class="collapse">
-  <li><a href="#objetivos-da-aula" id="toc-objetivos-da-aula" class="nav-link" data-scroll-target="#objetivos-da-aula">Objetivos da aula</a></li>
-  <li><a href="#pacotes-utilizados" id="toc-pacotes-utilizados" class="nav-link" data-scroll-target="#pacotes-utilizados">Pacotes utilizados</a></li>
+  <li><a href="#sumarização-e-gráfico-de-barras-com-desvio-padrão" id="toc-sumarização-e-gráfico-de-barras-com-desvio-padrão" class="nav-link" data-scroll-target="#sumarização-e-gráfico-de-barras-com-desvio-padrão">Sumarização e Gráfico de Barras com Desvio Padrão</a></li>
+  <li><a href="#gráfico-de-barras-com-intervalo-de-confiança-ic" id="toc-gráfico-de-barras-com-intervalo-de-confiança-ic" class="nav-link" data-scroll-target="#gráfico-de-barras-com-intervalo-de-confiança-ic">Gráfico de Barras com Intervalo de Confiança (IC)</a></li>
+  <li><a href="#teste-t-de-student" id="toc-teste-t-de-student" class="nav-link" data-scroll-target="#teste-t-de-student">Teste T de Student</a></li>
   </ul></li>
-  <li><a href="#parte-1-leitura-dos-dados-e-cálculo-da-audpc" id="toc-parte-1-leitura-dos-dados-e-cálculo-da-audpc" class="nav-link" data-scroll-target="#parte-1-leitura-dos-dados-e-cálculo-da-audpc">Parte 1 — Leitura dos dados e cálculo da AUDPC</a>
+  <li><a href="#avaliação-de-escalas-e-acuidade-visual" id="toc-avaliação-de-escalas-e-acuidade-visual" class="nav-link" data-scroll-target="#avaliação-de-escalas-e-acuidade-visual">Avaliação de Escalas e Acuidade Visual</a>
   <ul class="collapse">
-  <li><a href="#leitura-da-planilha-curve" id="toc-leitura-da-planilha-curve" class="nav-link" data-scroll-target="#leitura-da-planilha-curve">Leitura da planilha <code>curve</code></a></li>
-  <li><a href="#resumo-gráfico-da-severidade-ao-longo-do-tempo" id="toc-resumo-gráfico-da-severidade-ao-longo-do-tempo" class="nav-link" data-scroll-target="#resumo-gráfico-da-severidade-ao-longo-do-tempo">Resumo gráfico da severidade ao longo do tempo</a></li>
-  <li><a href="#área-abaixo-da-curva-de-progresso-da-doença" id="toc-área-abaixo-da-curva-de-progresso-da-doença" class="nav-link" data-scroll-target="#área-abaixo-da-curva-de-progresso-da-doença">Área abaixo da curva de progresso da doença</a></li>
-  <li><a href="#estatísticas-descritivas-da-audpc" id="toc-estatísticas-descritivas-da-audpc" class="nav-link" data-scroll-target="#estatísticas-descritivas-da-audpc">Estatísticas descritivas da AUDPC</a>
+  <li><a href="#teste-de-normalidade-de-shapiro-wilk" id="toc-teste-de-normalidade-de-shapiro-wilk" class="nav-link" data-scroll-target="#teste-de-normalidade-de-shapiro-wilk">Teste de Normalidade de Shapiro-Wilk</a></li>
+  <li><a href="#teste-de-wilcoxon-mann-whitney-u-e-premissas-paramétricas" id="toc-teste-de-wilcoxon-mann-whitney-u-e-premissas-paramétricas" class="nav-link" data-scroll-target="#teste-de-wilcoxon-mann-whitney-u-e-premissas-paramétricas">Teste de Wilcoxon (Mann-Whitney U) e Premissas Paramétricas</a></li>
+  </ul></li>
+  <li><a href="#análise-de-variância-anova-de-fatores-únicos-one-way-anova" id="toc-análise-de-variância-anova-de-fatores-únicos-one-way-anova" class="nav-link" data-scroll-target="#análise-de-variância-anova-de-fatores-únicos-one-way-anova">Análise de Variância (ANOVA) de Fatores Únicos (One-Way ANOVA)</a>
   <ul class="collapse">
-  <li><a href="#gráfico-com-média-e-desvio-padrão" id="toc-gráfico-com-média-e-desvio-padrão" class="nav-link" data-scroll-target="#gráfico-com-média-e-desvio-padrão">Gráfico com média e desvio-padrão</a></li>
-  <li><a href="#gráfico-com-média-e-erro-padrão-da-média" id="toc-gráfico-com-média-e-erro-padrão-da-média" class="nav-link" data-scroll-target="#gráfico-com-média-e-erro-padrão-da-média">Gráfico com média e erro-padrão da média</a></li>
-  <li><a href="#gráfico-com-intervalo-de-confiança-de-95" id="toc-gráfico-com-intervalo-de-confiança-de-95" class="nav-link" data-scroll-target="#gráfico-com-intervalo-de-confiança-de-95">Gráfico com intervalo de confiança de 95%</a></li>
+  <li><a href="#premissas-do-modelo-de-anova" id="toc-premissas-do-modelo-de-anova" class="nav-link" data-scroll-target="#premissas-do-modelo-de-anova">Premissas do modelo de ANOVA</a></li>
+  <li><a href="#teste-de-comparações-múltiplas-de-médias" id="toc-teste-de-comparações-múltiplas-de-médias" class="nav-link" data-scroll-target="#teste-de-comparações-múltiplas-de-médias">Teste de Comparações Múltiplas de Médias</a></li>
   </ul></li>
-  </ul></li>
-  <li><a href="#parte-2-teste-t-para-dois-grupos-independentes" id="toc-parte-2-teste-t-para-dois-grupos-independentes" class="nav-link" data-scroll-target="#parte-2-teste-t-para-dois-grupos-independentes">Parte 2 — Teste <em>t</em> para dois grupos independentes</a>
-  <ul class="collapse">
-  <li><a href="#quando-usar" id="toc-quando-usar" class="nav-link" data-scroll-target="#quando-usar">Quando usar?</a></li>
-  <li><a href="#hipóteses" id="toc-hipóteses" class="nav-link" data-scroll-target="#hipóteses">Hipóteses</a></li>
-  <li><a href="#estatística-do-teste" id="toc-estatística-do-teste" class="nav-link" data-scroll-target="#estatística-do-teste">Estatística do teste</a></li>
-  <li><a href="#aplicação-em-r" id="toc-aplicação-em-r" class="nav-link" data-scroll-target="#aplicação-em-r">Aplicação em R</a></li>
-  <li><a href="#interpretação" id="toc-interpretação" class="nav-link" data-scroll-target="#interpretação">Interpretação</a></li>
-  </ul></li>
-  <li><a href="#parte-3-teste-t-pareado" id="toc-parte-3-teste-t-pareado" class="nav-link" data-scroll-target="#parte-3-teste-t-pareado">Parte 3 — Teste <em>t</em> pareado</a>
-  <ul class="collapse">
-  <li><a href="#situação-experimental" id="toc-situação-experimental" class="nav-link" data-scroll-target="#situação-experimental">Situação experimental</a></li>
-  <li><a href="#visualização-inicial" id="toc-visualização-inicial" class="nav-link" data-scroll-target="#visualização-inicial">Visualização inicial</a></li>
-  <li><a href="#organização-dos-dados-em-formato-largo" id="toc-organização-dos-dados-em-formato-largo" class="nav-link" data-scroll-target="#organização-dos-dados-em-formato-largo">Organização dos dados em formato largo</a></li>
-  <li><a href="#lógica-do-teste-t-pareado" id="toc-lógica-do-teste-t-pareado" class="nav-link" data-scroll-target="#lógica-do-teste-t-pareado">Lógica do teste <em>t</em> pareado</a></li>
-  <li><a href="#aplicação-do-teste-t-pareado" id="toc-aplicação-do-teste-t-pareado" class="nav-link" data-scroll-target="#aplicação-do-teste-t-pareado">Aplicação do teste <em>t</em> pareado</a></li>
-  <li><a href="#visualização-das-diferenças" id="toc-visualização-das-diferenças" class="nav-link" data-scroll-target="#visualização-das-diferenças">Visualização das diferenças</a></li>
-  </ul></li>
-  <li><a href="#parte-4-verificação-da-normalidade-e-alternativa-não-paramétrica" id="toc-parte-4-verificação-da-normalidade-e-alternativa-não-paramétrica" class="nav-link" data-scroll-target="#parte-4-verificação-da-normalidade-e-alternativa-não-paramétrica">Parte 4 — Verificação da normalidade e alternativa não paramétrica</a>
-  <ul class="collapse">
-  <li><a href="#por-que-verificar-a-normalidade" id="toc-por-que-verificar-a-normalidade" class="nav-link" data-scroll-target="#por-que-verificar-a-normalidade">Por que verificar a normalidade?</a></li>
-  <li><a href="#inspeção-gráfica-e-teste-de-shapiro-wilk" id="toc-inspeção-gráfica-e-teste-de-shapiro-wilk" class="nav-link" data-scroll-target="#inspeção-gráfica-e-teste-de-shapiro-wilk">Inspeção gráfica e teste de Shapiro-Wilk</a></li>
-  <li><a href="#teste-não-paramétrico-de-wilcoxon-pareado" id="toc-teste-não-paramétrico-de-wilcoxon-pareado" class="nav-link" data-scroll-target="#teste-não-paramétrico-de-wilcoxon-pareado">Teste não paramétrico de Wilcoxon pareado</a></li>
-  <li><a href="#comentário-metodológico" id="toc-comentário-metodológico" class="nav-link" data-scroll-target="#comentário-metodológico">Comentário metodológico</a></li>
-  </ul></li>
-  <li><a href="#parte-5-anova-para-comparação-de-três-ou-mais-grupos" id="toc-parte-5-anova-para-comparação-de-três-ou-mais-grupos" class="nav-link" data-scroll-target="#parte-5-anova-para-comparação-de-três-ou-mais-grupos">Parte 5 — ANOVA para comparação de três ou mais grupos</a>
-  <ul class="collapse">
-  <li><a href="#situação-experimental-1" id="toc-situação-experimental-1" class="nav-link" data-scroll-target="#situação-experimental-1">Situação experimental</a></li>
-  <li><a href="#visualização-exploratória" id="toc-visualização-exploratória" class="nav-link" data-scroll-target="#visualização-exploratória">Visualização exploratória</a></li>
-  <li><a href="#modelo-de-anova" id="toc-modelo-de-anova" class="nav-link" data-scroll-target="#modelo-de-anova">Modelo de ANOVA</a></li>
-  <li><a href="#ajuste-do-modelo" id="toc-ajuste-do-modelo" class="nav-link" data-scroll-target="#ajuste-do-modelo">Ajuste do modelo</a></li>
-  </ul></li>
-  <li><a href="#parte-6-diagnóstico-dos-pressupostos-da-anova" id="toc-parte-6-diagnóstico-dos-pressupostos-da-anova" class="nav-link" data-scroll-target="#parte-6-diagnóstico-dos-pressupostos-da-anova">Parte 6 — Diagnóstico dos pressupostos da ANOVA</a>
-  <ul class="collapse">
-  <li><a href="#inspeção-da-normalidade-resíduos" id="toc-inspeção-da-normalidade-resíduos" class="nav-link" data-scroll-target="#inspeção-da-normalidade-resíduos">Inspeção da normalidade resíduos</a></li>
-  <li><a href="#homogeneidade-de-variâncias" id="toc-homogeneidade-de-variâncias" class="nav-link" data-scroll-target="#homogeneidade-de-variâncias">Homogeneidade de variâncias</a></li>
-  <li><a href="#comentário" id="toc-comentário" class="nav-link" data-scroll-target="#comentário">Comentário</a></li>
-  </ul></li>
-  <li><a href="#parte-7-médias-ajustadas-com-emmeans-e-comparação-de-tukey" id="toc-parte-7-médias-ajustadas-com-emmeans-e-comparação-de-tukey" class="nav-link" data-scroll-target="#parte-7-médias-ajustadas-com-emmeans-e-comparação-de-tukey">Parte 7 — Médias ajustadas com <code>emmeans</code> e comparação de Tukey</a>
-  <ul class="collapse">
-  <li><a href="#por-que-não-comparar-pares-com-vários-testes-t" id="toc-por-que-não-comparar-pares-com-vários-testes-t" class="nav-link" data-scroll-target="#por-que-não-comparar-pares-com-vários-testes-t">Por que não comparar pares com vários testes <em>t</em>?</a></li>
-  <li><a href="#médias-marginais-estimadas" id="toc-médias-marginais-estimadas" class="nav-link" data-scroll-target="#médias-marginais-estimadas">Médias marginais estimadas</a></li>
-  <li><a href="#comparações-múltiplas-de-tukey" id="toc-comparações-múltiplas-de-tukey" class="nav-link" data-scroll-target="#comparações-múltiplas-de-tukey">Comparações múltiplas de Tukey</a></li>
-  <li><a href="#letras-de-agrupamento" id="toc-letras-de-agrupamento" class="nav-link" data-scroll-target="#letras-de-agrupamento">Letras de agrupamento</a></li>
-  <li><a href="#gráfico-das-médias-com-intervalos-de-confiança-e-letras" id="toc-gráfico-das-médias-com-intervalos-de-confiança-e-letras" class="nav-link" data-scroll-target="#gráfico-das-médias-com-intervalos-de-confiança-e-letras">Gráfico das médias com intervalos de confiança e letras</a></li>
-  </ul></li>
-  <li><a href="#parte-8-síntese-conceitual-da-aula" id="toc-parte-8-síntese-conceitual-da-aula" class="nav-link" data-scroll-target="#parte-8-síntese-conceitual-da-aula">Parte 8 — Síntese conceitual da aula</a>
-  <ul class="collapse">
-  <li><a href="#teste-t-para-amostras-independentes" id="toc-teste-t-para-amostras-independentes" class="nav-link" data-scroll-target="#teste-t-para-amostras-independentes">1. Teste <em>t</em> para amostras independentes</a></li>
-  <li><a href="#teste-t-pareado" id="toc-teste-t-pareado" class="nav-link" data-scroll-target="#teste-t-pareado">2. Teste <em>t</em> pareado</a></li>
-  <li><a href="#teste-de-wilcoxon-pareado" id="toc-teste-de-wilcoxon-pareado" class="nav-link" data-scroll-target="#teste-de-wilcoxon-pareado">3. Teste de Wilcoxon pareado</a></li>
-  <li><a href="#anova" id="toc-anova" class="nav-link" data-scroll-target="#anova">4. ANOVA</a></li>
-  <li><a href="#emmeans-e-tukey" id="toc-emmeans-e-tukey" class="nav-link" data-scroll-target="#emmeans-e-tukey">5. <code>emmeans</code> e Tukey</a></li>
-  </ul></li>
-  <li><a href="#parte-9-sugestões-de-interpretação-para-o-relatório" id="toc-parte-9-sugestões-de-interpretação-para-o-relatório" class="nav-link" data-scroll-target="#parte-9-sugestões-de-interpretação-para-o-relatório">Parte 9 — Sugestões de interpretação para o relatório</a></li>
   </ul>
 </nav>
     </div>
@@ -281,7 +241,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">aula4</h1>
+<h1 class="title">Aula4: Análise de Progresso de Doença e Comparações</h1>
 </div>
 
 
@@ -298,85 +258,118 @@ window.Quarto = {
 </header>
 
 
-<section id="aula-4-comparação-de-médias-teste-t-testes-não-paramétricos-e-anova" class="level1">
-<h1>Aula 4 — comparação de médias: teste <em>t</em>, testes não paramétricos e ANOVA</h1>
-<section id="objetivos-da-aula" class="level2">
-<h2 class="anchored" data-anchor-id="objetivos-da-aula">Objetivos da aula</h2>
-<p>Nesta aula, vamos organizar uma sequência de análises estatísticas voltadas à comparação de médias em situações comuns em experimentos biológicos e agronômicos. O foco será em três contextos:</p>
-<ol type="1">
-<li><p>comparação entre <strong>dois grupos independentes</strong>;</p></li>
-<li><p>comparação entre <strong>duas condições medidas nos mesmos indivíduos</strong>;</p></li>
-<li><p>comparação entre <strong>três ou mais grupos</strong>.</p></li>
-</ol>
-<p>Ao longo da aula, usaremos exemplos reais do arquivo <code>dados_diversos.xlsx</code>, discutindo a lógica estatística, as hipóteses, as fórmulas e a implementação em <code>R</code>.</p>
-</section>
-<section id="pacotes-utilizados" class="level2">
-<h2 class="anchored" data-anchor-id="pacotes-utilizados">Pacotes utilizados</h2>
+<section id="importação-e-cálculo-de-área-abaixo-da-curva-de-progresso-da-doença-audpc" class="level2">
+<h2 class="anchored" data-anchor-id="importação-e-cálculo-de-área-abaixo-da-curva-de-progresso-da-doença-audpc">Importação e Cálculo de Área Abaixo da Curva de Progresso da Doença (AUDPC)</h2>
+<p>O cálculo da AUDPC é amplamente utilizado em fitopatologia para quantificar a severidade da doença ao longo do tempo. Nesta seção, vamos calcular a AUDPC a partir de um conjunto de dados e criar gráficos relacionando a irrigação com a severidade.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(epifitter)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (tidyverse)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   4.0.2     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.2.1     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
-<hr>
-</section>
-</section>
-<section id="parte-1-leitura-dos-dados-e-cálculo-da-audpc" class="level1">
-<h1>Parte 1 — Leitura dos dados e cálculo da AUDPC</h1>
-<section id="leitura-da-planilha-curve" class="level2">
-<h2 class="anchored" data-anchor-id="leitura-da-planilha-curve">Leitura da planilha <code>curve</code></h2>
-<p>O primeiro conjunto de dados contém avaliações de severidade ao longo do tempo, em dois tratamentos de irrigação. Antes de comparar tratamentos, é útil visualizar a progressão temporal da doença.</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (readxl)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span> (epifitter)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Ler os dados</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">read_excel</span> (<span class="st">"dados_diversos.xlsx"</span>, <span class="st">"curve"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Gráfico de Área da curva de progresso da doença</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>dados <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span> (Irrigation, day) <span class="sc">|&gt;</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span> (<span class="at">mean_sev =</span> <span class="fu">mean</span>(severity<span class="sc">*</span><span class="dv">100</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_sev =</span> <span class="fu">sd</span>(severity<span class="sc">*</span><span class="dv">100</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(day, mean_sev, <span class="at">group =</span> Irrigation, </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>             <span class="at">color =</span> Irrigation))<span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_area</span>(<span class="at">alpha =</span> <span class="fl">0.2</span>, <span class="at">position =</span> <span class="st">"identity"</span>)<span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>mean_sev<span class="sc">-</span>sd_sev,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>                <span class="at">ymax=</span>mean_sev<span class="sc">+</span>sd_sev), <span class="at">width=</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span> <span class="st">"Dias"</span>, <span class="at">y=</span><span class="st">"Severidade (%)"</span>)<span class="sc">+</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'Irrigation'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Aula4_files/figure-html/unnamed-chunk-1-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="sumarização-e-gráfico-de-barras-com-desvio-padrão" class="level3">
+<h3 class="anchored" data-anchor-id="sumarização-e-gráfico-de-barras-com-desvio-padrão">Sumarização e Gráfico de Barras com Desvio Padrão</h3>
+<p>Vamos utilizar as funções do pacote <code>dplyr</code> para calcular a AUDPC agrupada por parcela (Irrigação x Repetição) e, na sequência, obter a média e o desvio padrão de cada tratamento (Irrigação).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dados <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"dados_diversos.xlsx"</span>,<span class="st">"curve"</span>)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(dados)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 60
-Columns: 4
-$ Irrigation &lt;chr&gt; "Furrow", "Furrow", "Furrow", "Furrow", "Furrow", "Furrow",…
-$ rep        &lt;dbl&gt; 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2, 3, 1, 2,…
-$ day        &lt;dbl&gt; 0, 0, 0, 7, 7, 7, 14, 14, 14, 21, 21, 21, 28, 28, 28, 35, 3…
-$ severity   &lt;dbl&gt; 0.010, 0.010, 0.010, 0.036, 0.036, 0.040, 0.097, 0.097, 0.1…</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>dados_audpc_plot <span class="ot">&lt;-</span> dados <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. Calcula a estatística média e sd da AUDPC</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Irrigation, rep) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">audpc =</span> <span class="fu">AUDPC</span> (day, severity), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Irrigation) <span class="sc">|&gt;</span>  </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_audpc =</span> <span class="fu">mean</span>(audpc),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>            <span class="at">sd_audpc =</span> <span class="fu">sd</span>(audpc), <span class="at">.groups =</span> <span class="st">"drop"</span>) </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Faz o plot</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>dados_audpc_plot <span class="sc">|&gt;</span> </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Irrigation, mean_audpc))<span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width=</span><span class="fl">0.5</span>)<span class="sc">+</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span> mean_audpc <span class="sc">-</span> sd_audpc,</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean_audpc <span class="sc">+</span> sd_audpc),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                <span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">20</span>)<span class="sc">+</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span> (<span class="at">x=</span><span class="st">"Irrigação"</span>, <span class="at">y=</span> <span class="st">"Média da AUDPC"</span>)<span class="sc">+</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Aula4_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(dados)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 4
-  Irrigation   rep   day severity
-  &lt;chr&gt;      &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;
-1 Furrow         1     0    0.01 
-2 Furrow         2     0    0.01 
-3 Furrow         3     0    0.01 
-4 Furrow         1     7    0.036
-5 Furrow         2     7    0.036
-6 Furrow         3     7    0.04 </code></pre>
 </div>
 </div>
 </section>
-<section id="resumo-gráfico-da-severidade-ao-longo-do-tempo" class="level2">
-<h2 class="anchored" data-anchor-id="resumo-gráfico-da-severidade-ao-longo-do-tempo">Resumo gráfico da severidade ao longo do tempo</h2>
-<p>A seguir, calculamos a média e o desvio-padrão da severidade, em porcentagem, para cada combinação de tratamento e tempo de avaliação.</p>
+<section id="gráfico-de-barras-com-intervalo-de-confiança-ic" class="level3">
+<h3 class="anchored" data-anchor-id="gráfico-de-barras-com-intervalo-de-confiança-ic">Gráfico de Barras com Intervalo de Confiança (IC)</h3>
+<p>Para alterar as suas barras de erro de Desvio Padrão (SD) para Intervalo de Confiança (IC) (normalmente usamos o IC de 95%), precisamos fazer um pequeno cálculo adicional dentro do <code>summarise</code>.</p>
+<p>O Intervalo de Confiança é calculado usando o Erro Padrão (Desvio Padrão dividido pela raiz quadrada do número de repetições) multiplicado pelo valor <span class="math inline">\(t\)</span> da distribuição de Student (que nos dá os 95% de confiança).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>   dados <span class="sc">|&gt;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(Irrigation, day) <span class="sc">|&gt;</span>            </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>      <span class="at">mean_sev =</span> <span class="fu">mean</span>(severity <span class="sc">*</span> <span class="dv">100</span>),</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sev =</span> <span class="fu">sd</span>(severity <span class="sc">*</span> <span class="dv">100</span>),</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> day, <span class="at">y =</span> mean_sev, <span class="at">color =</span> Irrigation, <span class="at">group =</span> Irrigation)) <span class="sc">+</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="fl">2.1</span>) <span class="sc">+</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_sev <span class="sc">-</span> sd_sev,</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean_sev <span class="sc">+</span> sd_sev),</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">100</span>) <span class="sc">+</span></span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Dias após a avaliação inicial"</span>,</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Severidade média (%)"</span>,</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"Irrigação"</span></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>dados <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 1. Calcula a AUDPC por parcela (Irrigação x Repetição)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Irrigation, rep) <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">audpc =</span> <span class="fu">AUDPC</span>(day, severity), <span class="at">.groups =</span> <span class="st">"drop"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 2. Calcula média, N, SD e o Intervalo de Confiança (95%)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Irrigation) <span class="sc">|&gt;</span>  </span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_audpc =</span> <span class="fu">mean</span>(audpc),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_audpc =</span> <span class="fu">sd</span>(audpc),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_rep =</span> <span class="fu">n</span>(),  </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">erro_ic =</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n_rep <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> (sd_audpc <span class="sc">/</span> <span class="fu">sqrt</span>(n_rep)),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 3. Faz o plot com as margens de erro</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(Irrigation, mean_audpc)) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">"lightgray"</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span> </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_audpc <span class="sc">-</span> erro_ic,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean_audpc <span class="sc">+</span> erro_ic),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>, <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Irrigação"</span>, <span class="at">y =</span> <span class="st">"Média da AUDPC (IC 95%)"</span>) <span class="sc">+</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_get</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -386,186 +379,25 @@ $ severity   &lt;dbl&gt; 0.010, 0.010, 0.010, 0.036, 0.036, 0.040, 0.097, 0.097,
 </div>
 </div>
 </section>
-<section id="área-abaixo-da-curva-de-progresso-da-doença" class="level2">
-<h2 class="anchored" data-anchor-id="área-abaixo-da-curva-de-progresso-da-doença">Área abaixo da curva de progresso da doença</h2>
-<p>Em estudos epidemiológicos, muitas vezes desejamos resumir toda a curva de progresso em uma única medida. Uma das medidas mais usadas é a <strong>AUDPC</strong> (<em>Area Under the Disease Progress Curve</em>), ou área abaixo da curva de progresso da doença.</p>
-<p>A fórmula geral da AUDPC, pelo método dos trapézios, é:</p>
-<p><span class="math display">\[
-AUDPC = \sum_{i=1}^{n-1} \left( \frac{y_i + y_{i+1}}{2} \right)(t_{i+1} - t_i)
-\]</span></p>
-<p>em que:</p>
-<ul>
-<li><span class="math inline">\(y_i\)</span> e <span class="math inline">\(y_{i+1}\)</span> são as severidades observadas em duas avaliações consecutivas;</li>
-<li><span class="math inline">\(t_i\)</span> e <span class="math inline">\(t_{i+1}\)</span> são os tempos correspondentes;</li>
-<li><span class="math inline">\(n\)</span> é o número de avaliações.</li>
-</ul>
-<p>Essa estatística resume a intensidade da doença ao longo do tempo. Quanto maior a AUDPC, maior a quantidade acumulada de doença no período avaliado.</p>
+<section id="teste-t-de-student" class="level3">
+<h3 class="anchored" data-anchor-id="teste-t-de-student">Teste T de Student</h3>
+<p>Verificando estatisticamente a diferença da média de AUDPC entre dois tratamentos de irrigação.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>dados2 <span class="ot">&lt;-</span> dados <span class="sc">|&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Irrigation, rep) <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">audpc =</span> <span class="fu">AUDPC</span>(day, severity),</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">Irrigation =</span> <span class="fu">as.factor</span>(Irrigation))</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>dados2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 6 × 3
-  Irrigation   rep audpc
-  &lt;fct&gt;      &lt;dbl&gt; &lt;dbl&gt;
-1 Drip           1  13.0
-2 Drip           2  13.9
-3 Drip           3  13.3
-4 Furrow         1  13.5
-5 Furrow         2  14.0
-6 Furrow         3  13.9</code></pre>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rstatix)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Anexando pacote: 'rstatix'</code></pre>
 </div>
+<div class="cell-output cell-output-stderr">
+<pre><code>O seguinte objeto é mascarado por 'package:stats':
+
+    filter</code></pre>
 </div>
-</section>
-<section id="estatísticas-descritivas-da-audpc" class="level2">
-<h2 class="anchored" data-anchor-id="estatísticas-descritivas-da-audpc">Estatísticas descritivas da AUDPC</h2>
-<p>Antes de qualquer teste formal, é recomendável resumir os dados por tratamento.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>resumo_audpc <span class="ot">&lt;-</span> dados2 <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Irrigation) <span class="sc">|&gt;</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_audpc =</span> <span class="fu">mean</span>(audpc),</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_audpc =</span> <span class="fu">sd</span>(audpc),</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>(),</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">se_audpc =</span> sd_audpc <span class="sc">/</span> <span class="fu">sqrt</span>(n),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">ic_95 =</span> <span class="fu">qt</span>(<span class="fl">0.975</span>, <span class="at">df =</span> n <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">*</span> se_audpc,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>resumo_audpc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 6
-  Irrigation mean_audpc sd_audpc     n se_audpc ic_95
-  &lt;fct&gt;           &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;dbl&gt;
-1 Drip             13.4    0.453     3    0.261 1.13 
-2 Furrow           13.8    0.245     3    0.142 0.609</code></pre>
-</div>
-</div>
-<section id="gráfico-com-média-e-desvio-padrão" class="level3">
-<h3 class="anchored" data-anchor-id="gráfico-com-média-e-desvio-padrão">Gráfico com média e desvio-padrão</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>resumo_audpc <span class="sc">|&gt;</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Irrigation, <span class="at">y =</span> mean_audpc)) <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">"gray80"</span>) <span class="sc">+</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_audpc <span class="sc">-</span> sd_audpc,</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean_audpc <span class="sc">+</span> sd_audpc),</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Irrigação"</span>, <span class="at">y =</span> <span class="st">"AUDPC média (± DP)"</span>) <span class="sc">+</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">15</span>)<span class="sc">+</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="gráfico-com-média-e-erro-padrão-da-média" class="level3">
-<h3 class="anchored" data-anchor-id="gráfico-com-média-e-erro-padrão-da-média">Gráfico com média e erro-padrão da média</h3>
-<p>O erro-padrão da média é dado por:</p>
-<p><span class="math display">\[
-EP(\bar{x}) = \frac{s}{\sqrt{n}}
-\]</span></p>
-<p>em que:</p>
-<ul>
-<li><span class="math inline">\(s\)</span> é o desvio-padrão amostral;</li>
-<li><span class="math inline">\(n\)</span> é o tamanho da amostra.</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>resumo_audpc <span class="sc">|&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Irrigation, <span class="at">y =</span> mean_audpc)) <span class="sc">+</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">"gray80"</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_audpc <span class="sc">-</span> se_audpc,</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean_audpc <span class="sc">+</span> se_audpc),</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Irrigação"</span>, <span class="at">y =</span> <span class="st">"AUDPC média (± EP)"</span>) <span class="sc">+</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>   <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">15</span>)<span class="sc">+</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-</section>
-<section id="gráfico-com-intervalo-de-confiança-de-95" class="level3">
-<h3 class="anchored" data-anchor-id="gráfico-com-intervalo-de-confiança-de-95">Gráfico com intervalo de confiança de 95%</h3>
-<p>O intervalo de confiança para a média pode ser escrito como:</p>
-<p><span class="math display">\[
-\bar{x} \pm t_{\alpha/2,\, n-1} \times \frac{s}{\sqrt{n}}
-\]</span></p>
-<p>em que <span class="math inline">\(t_{\alpha/2,\, n-1}\)</span> é o quantil da distribuição <em>t</em> de Student com <span class="math inline">\(n-1\)</span> graus de liberdade.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>resumo_audpc <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Irrigation, <span class="at">y =</span> mean_audpc)) <span class="sc">+</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">width =</span> <span class="fl">0.5</span>, <span class="at">fill =</span> <span class="st">"skyblue"</span>) <span class="sc">+</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_audpc <span class="sc">-</span> ic_95,</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymax =</span> mean_audpc <span class="sc">+</span> ic_95),</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.1</span>) <span class="sc">+</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">15</span>)<span class="sc">+</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Irrigação"</span>, <span class="at">y =</span> <span class="st">"AUDPC média (IC 95%)"</span>) <span class="sc">+</span></span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-</div>
-<hr>
-</section>
-</section>
-</section>
-<section id="parte-2-teste-t-para-dois-grupos-independentes" class="level1">
-<h1>Parte 2 — Teste <em>t</em> para dois grupos independentes</h1>
-<section id="quando-usar" class="level2">
-<h2 class="anchored" data-anchor-id="quando-usar">Quando usar?</h2>
-<p>O teste <em>t</em> para amostras independentes é usado quando queremos comparar as médias de <strong>dois grupos distintos</strong>, assumindo independência entre as observações.</p>
-<p>Neste caso, vamos comparar a AUDPC entre os dois tratamentos de irrigação.</p>
-</section>
-<section id="hipóteses" class="level2">
-<h2 class="anchored" data-anchor-id="hipóteses">Hipóteses</h2>
-<p>As hipóteses do teste são:</p>
-<p><span class="math display">\[
-H_0: \mu_1 = \mu_2
-\]</span></p>
-<p><span class="math display">\[
-H_1: \mu_1 \neq \mu_2
-\]</span></p>
-<p>ou seja, a hipótese nula afirma que as médias populacionais são iguais, enquanto a hipótese alternativa afirma que elas diferem.</p>
-</section>
-<section id="estatística-do-teste" class="level2">
-<h2 class="anchored" data-anchor-id="estatística-do-teste">Estatística do teste</h2>
-<p>Quando as variâncias são assumidas como diferentes, usa-se a versão de Welch do teste <em>t</em>, cuja estatística é:</p>
-<p><span class="math display">\[
-t = \frac{\bar{x}_1 - \bar{x}_2}{\sqrt{\frac{s_1^2}{n_1} + \frac{s_2^2}{n_2}}}
-\]</span></p>
-<p>em que:</p>
-<ul>
-<li><span class="math inline">\(\bar{x}_1\)</span> e <span class="math inline">\(\bar{x}_2\)</span> são as médias amostrais;</li>
-<li><span class="math inline">\(s_1^2\)</span> e <span class="math inline">\(s_2^2\)</span> são as variâncias amostrais;</li>
-<li><span class="math inline">\(n_1\)</span> e <span class="math inline">\(n_2\)</span> são os tamanhos amostrais.</li>
-</ul>
-</section>
-<section id="aplicação-em-r" class="level2">
-<h2 class="anchored" data-anchor-id="aplicação-em-r">Aplicação em R</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>teste_t_audpc <span class="ot">&lt;-</span> <span class="fu">t.test</span>(audpc <span class="sc">~</span> Irrigation, <span class="at">data =</span> dados2)</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>teste_t_audpc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>dados_audpc <span class="ot">&lt;-</span> dados <span class="sc">|&gt;</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Irrigation, rep) <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">audpc=</span><span class="fu">AUDPC</span>(day, severity), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(audpc <span class="sc">~</span> Irrigation, <span class="at">data =</span> dados_audpc)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Welch Two Sample t-test
@@ -581,42 +413,13 @@ sample estimates:
 </div>
 </div>
 </section>
-<section id="interpretação" class="level2">
-<h2 class="anchored" data-anchor-id="interpretação">Interpretação</h2>
-<p>O objeto retornado informa:</p>
-<ul>
-<li>a estatística <em>t</em>;</li>
-<li>os graus de liberdade;</li>
-<li>o valor de <em>p</em>;</li>
-<li>o intervalo de confiança para a diferença entre médias;</li>
-<li>as médias estimadas em cada grupo.</li>
-</ul>
-<p>Se o valor de <em>p</em> for menor que o nível de significância adotado, rejeitamos <span class="math inline">\(H_0\)</span> e concluímos que há evidência de diferença entre as médias.</p>
-<hr>
 </section>
-</section>
-<section id="parte-3-teste-t-pareado" class="level1">
-<h1>Parte 3 — Teste <em>t</em> pareado</h1>
-<section id="situação-experimental" class="level2">
-<h2 class="anchored" data-anchor-id="situação-experimental">Situação experimental</h2>
-<p>Agora usaremos a planilha <code>escala</code>, em que os mesmos avaliadores foram medidos em duas condições de avaliação. Nesse caso, as observações <strong>não são independentes</strong>, pois cada avaliador aparece nas duas condições.</p>
-<p>Logo, o teste adequado é o <strong>teste <em>t</em> pareado</strong>.</p>
+<section id="avaliação-de-escalas-e-acuidade-visual" class="level2">
+<h2 class="anchored" data-anchor-id="avaliação-de-escalas-e-acuidade-visual">Avaliação de Escalas e Acuidade Visual</h2>
+<p>Aqui analisamos se os avaliadores têm diferenças significativas nas estimativas visuais de doença com ou sem auxílio de escalas (Unaided vs Aided1).</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>escala <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"dados_diversos.xlsx"</span>, <span class="at">sheet =</span> <span class="st">"escala"</span>)</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(escala)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>Rows: 20
-Columns: 7
-$ assessment       &lt;chr&gt; "Unaided", "Unaided", "Unaided", "Unaided", "Unaided"…
-$ rater            &lt;chr&gt; "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "A"…
-$ acuracia         &lt;dbl&gt; 0.8092131, 0.7219848, 0.4000000, 0.8175313, 0.7476691…
-$ precisao         &lt;dbl&gt; 0.8262697, 0.7284040, 0.7149415, 0.8187018, 0.7532589…
-$ vies_geral       &lt;dbl&gt; 0.9793570, 0.9911874, 0.7827190, 0.9985702, 0.9925792…
-$ vies_sistematico &lt;dbl&gt; 1.1872167, 0.9217054, 1.1600785, 0.9481874, 1.1038873…
-$ vies_constante   &lt;dbl&gt; 0.1123982, -0.1055045, 0.7301412, -0.0056930, 0.07194…</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(escala)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>escala <span class="ot">&lt;-</span><span class="fu">read_excel</span>(<span class="st">"dados_diversos.xlsx"</span>, <span class="st">"escala"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(escala)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 7
   assessment rater acuracia precisao vies_geral vies_sistematico vies_constante
@@ -628,216 +431,106 @@ $ vies_constante   &lt;dbl&gt; 0.1123982, -0.1055045, 0.7301412, -0.0056930, 0.0
 5 Unaided    E        0.748    0.753      0.993            1.10         0.0719 
 6 Unaided    F        0.45     0.751      0.925            0.802        0.336  </code></pre>
 </div>
-</div>
-</section>
-<section id="visualização-inicial" class="level2">
-<h2 class="anchored" data-anchor-id="visualização-inicial">Visualização inicial</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>escala <span class="sc">|&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> assessment, <span class="at">y =</span> <span class="fu">log</span>(acuracia))) <span class="sc">+</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Tipo de avaliação"</span>, <span class="at">y =</span> <span class="st">"log(acuracia)"</span>) <span class="sc">+</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>escala <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(assessment,acuracia))<span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.color =</span> <span class="cn">NA</span>)<span class="sc">+</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Aula4_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-</div>
-</section>
-<section id="organização-dos-dados-em-formato-largo" class="level2">
-<h2 class="anchored" data-anchor-id="organização-dos-dados-em-formato-largo">Organização dos dados em formato largo</h2>
-<p>Para o teste pareado, é conveniente reorganizar a tabela de forma que cada linha corresponda a um avaliador e cada coluna a uma condição.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>escala_wide <span class="ot">&lt;-</span> escala <span class="sc">|&gt;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(rater, assessment, acuracia) <span class="sc">|&gt;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from =</span> assessment,</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from =</span> acuracia</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>escala_wide</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 10 × 3
-   rater Unaided Aided1
-   &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;
- 1 A       0.809  0.907
- 2 B       0.722  0.913
- 3 C       0.4    0.915
- 4 D       0.818  0.960
- 5 E       0.748  0.959
- 6 F       0.45   0.903
- 7 G       0.807  0.851
- 8 H       0.781  0.880
- 9 I       0.776  0.950
-10 J       0.5    0.944</code></pre>
-</div>
-</div>
-</section>
-<section id="lógica-do-teste-t-pareado" class="level2">
-<h2 class="anchored" data-anchor-id="lógica-do-teste-t-pareado">Lógica do teste <em>t</em> pareado</h2>
-<p>No teste pareado, o interesse recai sobre a diferença entre as duas medidas do mesmo indivíduo:</p>
-<p><span class="math display">\[
-d_i = x_{i1} - x_{i2}
-\]</span></p>
-<p>O teste é então realizado sobre a média das diferenças:</p>
-<p><span class="math display">\[
-H_0: \mu_d = 0
-\]</span></p>
-<p><span class="math display">\[
-H_1: \mu_d \neq 0
-\]</span></p>
-<p>A estatística do teste é:</p>
-<p><span class="math display">\[
-t = \frac{\bar{d}}{s_d / \sqrt{n}}
-\]</span></p>
-<p>em que:</p>
-<ul>
-<li><span class="math inline">\(\bar{d}\)</span> é a média das diferenças;</li>
-<li><span class="math inline">\(s_d\)</span> é o desvio-padrão das diferenças;</li>
-<li><span class="math inline">\(n\)</span> é o número de pares.</li>
-</ul>
-</section>
-<section id="aplicação-do-teste-t-pareado" class="level2">
-<h2 class="anchored" data-anchor-id="aplicação-do-teste-t-pareado">Aplicação do teste <em>t</em> pareado</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>teste_t_pareado <span class="ot">&lt;-</span> <span class="fu">t.test</span>(</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  escala_wide<span class="sc">$</span>Aided1,</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  escala_wide<span class="sc">$</span>Unaided,</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">paired =</span> <span class="cn">TRUE</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>teste_t_pareado</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>escala_wide<span class="ot">&lt;-</span> escala <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(rater, assessment, acuracia) <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">names_from=</span> assessment,</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">values_from=</span> acuracia</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(escala_wide<span class="sc">$</span>Unaided,</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>       escala_wide<span class="sc">$</span>Aided1,</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">paired=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Paired t-test
 
-data:  escala_wide$Aided1 and escala_wide$Unaided
-t = 4.4266, df = 9, p-value = 0.001655
+data:  escala_wide$Unaided and escala_wide$Aided1
+t = -4.4266, df = 9, p-value = 0.001655
 alternative hypothesis: true mean difference is not equal to 0
 95 percent confidence interval:
- 0.1159591 0.3583453
+ -0.3583453 -0.1159591
 sample estimates:
 mean difference 
-      0.2371522 </code></pre>
+     -0.2371522 </code></pre>
 </div>
 </div>
-</section>
-<section id="visualização-das-diferenças" class="level2">
-<h2 class="anchored" data-anchor-id="visualização-das-diferenças">Visualização das diferenças</h2>
-<p>Uma forma útil de compreender o teste pareado é visualizar explicitamente as diferenças entre pares.</p>
+<section id="teste-de-normalidade-de-shapiro-wilk" class="level3">
+<h3 class="anchored" data-anchor-id="teste-de-normalidade-de-shapiro-wilk">Teste de Normalidade de Shapiro-Wilk</h3>
+<p>A Hipótese Nula (<span class="math inline">\(H_0\)</span>) do teste de Shapiro-Wilk assume que os dados seguem uma distribuição normal. Se o p-valor for menor que 0.05, rejeitamos <span class="math inline">\(H_0\)</span>, concluindo que os dados não apresentam distribuição normal. Gráficos Q-Q também são auxiliares visuais úteis.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>diferencas <span class="ot">&lt;-</span> escala_wide <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> Aided1 <span class="sc">-</span> Unaided)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>diferencas <span class="sc">|&gt;</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> diff)) <span class="sc">+</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">10</span>, <span class="at">color =</span> <span class="st">"white"</span>) <span class="sc">+</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Diferença pareada (Aided1 - Unaided)"</span>, <span class="at">y =</span> <span class="st">"Frequência"</span>) <span class="sc">+</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(escala_wide<span class="sc">$</span>Unaided)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(escala_wide<span class="sc">$</span>Unaided)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Aula4_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-</div>
-<hr>
-</section>
-</section>
-<section id="parte-4-verificação-da-normalidade-e-alternativa-não-paramétrica" class="level1">
-<h1>Parte 4 — Verificação da normalidade e alternativa não paramétrica</h1>
-<section id="por-que-verificar-a-normalidade" class="level2">
-<h2 class="anchored" data-anchor-id="por-que-verificar-a-normalidade">Por que verificar a normalidade?</h2>
-<p>O teste <em>t</em> pareado assume que as <strong>diferenças</strong> entre pares seguem, aproximadamente, uma distribuição normal. Não é necessário que cada grupo separadamente seja normal; o foco está nas diferenças.</p>
-</section>
-<section id="inspeção-gráfica-e-teste-de-shapiro-wilk" class="level2">
-<h2 class="anchored" data-anchor-id="inspeção-gráfica-e-teste-de-shapiro-wilk">Inspeção gráfica e teste de Shapiro-Wilk</h2>
-<p>Vamos olhar para as hipóteses do Shapiro-Wilk:</p>
-<ul>
-<li><p><span class="math inline">\(H_0\)</span> (Hipótese Nula): Os dados <strong>são normais</strong> (seguem a curva de sino).</p></li>
-<li><p><span class="math inline">\(H_1\)</span> (Hipótese Alternativa): Os dados <strong>não são normais</strong> (são tortos/assimétricos).</p></li>
-</ul>
-<p>Ou seja:</p>
-<ul>
-<li>Se der <span class="math inline">\(p &gt; 0.05\)</span>: Excelente! Não podemos rejeitar a <span class="math inline">\(H_0\)</span>. Concluímos que os seus dados <strong>são normais</strong>. Sinal verde para fazer Testes T e ANOVAs sem medo.</li>
-</ul>
-<!-- -->
-<ul>
-<li>Se der <span class="math inline">\(p \le 0.05\)</span>: Problema! Rejeitamos a <span class="math inline">\(H_0\)</span>. A estatística diz que os seus dados <strong>não são normais</strong>.</li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(diferencas<span class="sc">$</span>diff)</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(diferencas<span class="sc">$</span>diff)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div>
-<figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" width="672"></p>
-</figure>
-</div>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(diferencas<span class="sc">$</span>diff)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(escala_wide<span class="sc">$</span>Unaided)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
 
-data:  diferencas$diff
-W = 0.8566, p-value = 0.06956</code></pre>
+data:  escala_wide$Unaided
+W = 0.77356, p-value = 0.00691</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(escala_wide<span class="sc">$</span>Aided1)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(escala_wide<span class="sc">$</span>Aided1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Aula4_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(escala_wide<span class="sc">$</span>Aided1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  escala_wide$Aided1
+W = 0.92775, p-value = 0.4261</code></pre>
 </div>
 </div>
 </section>
-<section id="teste-não-paramétrico-de-wilcoxon-pareado" class="level2">
-<h2 class="anchored" data-anchor-id="teste-não-paramétrico-de-wilcoxon-pareado">Teste não paramétrico de Wilcoxon pareado</h2>
-<p>Se a suposição de normalidade das diferenças for claramente violada, uma alternativa clássica é o <strong>teste de postos sinalizados de Wilcoxon</strong>.</p>
-<p>É a alternativa não-paramétrica ao clássico Teste T</p>
-<p>Em vez de calcular a média das diferenças e ficar confuso caso haja um outlier (um valor muito extremo que puxa a média para cima), o Wilcoxon usa um sistema de ranking (posições). Ele pega em todas as diferenças entre os métodos, ignora os zeros (empates), e ordena os dados do menor para o maior. Depois, ele compara a soma dos “rankings” das diferenças positivas com a soma dos “rankings” das diferenças negativas.</p>
-<p>Esse teste não compara médias, mas sim a tendência central das diferenças, com base nas magnitudes ordenadas dos desvios em relação a zero.</p>
-<p>As hipóteses continuam sendo, em essência:</p>
-<p><span class="math display">\[
-H_0: \text{a distribuição das diferenças é centrada em zero}
-\]</span></p>
-<p><span class="math display">\[
-H_1: \text{a distribuição das diferenças não é centrada em zero}
-\]</span></p>
+<section id="teste-de-wilcoxon-mann-whitney-u-e-premissas-paramétricas" class="level3">
+<h3 class="anchored" data-anchor-id="teste-de-wilcoxon-mann-whitney-u-e-premissas-paramétricas">Teste de Wilcoxon (Mann-Whitney U) e Premissas Paramétricas</h3>
+<p>O <strong>Teste de Wilcoxon</strong> é o equivalente não paramétrico ao Teste T pareado. É utilizado quando a premissa de normalidade dos dados não é atendida. O teste baseia-se em postos (ranks) em vez dos valores absolutos.</p>
+<p>Vale lembrar as premissas para uso do Teste T paramétrico: 1. <strong>Normalidade</strong>: se violada severamente, deve-se usar testes não paramétricos. 2. <strong>Homocedasticidade</strong>: se as variâncias não forem homogêneas, usamos a correção de Welch. Se a normalidade não for atingida, a abordagem não paramétrica prevalece.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>teste_wilcox <span class="ot">&lt;-</span> <span class="fu">wilcox.test</span>(</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  escala_wide<span class="sc">$</span>Unaided,</span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  escala_wide<span class="sc">$</span>Aided1,</span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">paired =</span> <span class="cn">TRUE</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>teste_wilcox</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wilcox.test</span>(escala_wide<span class="sc">$</span>Aided1,</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>       escala_wide<span class="sc">$</span>Unaided,</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">paired=</span><span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Wilcoxon signed rank exact test
 
-data:  escala_wide$Unaided and escala_wide$Aided1
-V = 0, p-value = 0.001953
+data:  escala_wide$Aided1 and escala_wide$Unaided
+V = 55, p-value = 0.001953
 alternative hypothesis: true location shift is not equal to 0</code></pre>
 </div>
 </div>
 </section>
-<section id="comentário-metodológico" class="level2">
-<h2 class="anchored" data-anchor-id="comentário-metodológico">Comentário metodológico</h2>
-<p>Em conjuntos de dados pequenos, é recomendável usar o gráfico QQ, o histograma das diferenças e o conhecimento do experimento em conjunto, em vez de depender exclusivamente do teste de Shapiro-Wilk. Pequenos desvios da normalidade nem sempre invalidam o teste <em>t</em>, sobretudo quando não há assimetria extrema ou valores discrepantes muito influentes.</p>
-<hr>
 </section>
-</section>
-<section id="parte-5-anova-para-comparação-de-três-ou-mais-grupos" class="level1">
-<h1>Parte 5 — ANOVA para comparação de três ou mais grupos</h1>
-<section id="situação-experimental-1" class="level2">
-<h2 class="anchored" data-anchor-id="situação-experimental-1">Situação experimental</h2>
-<p>Agora analisaremos a planilha <code>micelial</code>, que contém dados de taxa de crescimento micelial (<code>tcm</code>) para diferentes espécies.</p>
-<p>Quando o objetivo é comparar a média de uma variável resposta entre <strong>três ou mais grupos</strong>, a abordagem clássica é a <strong>análise de variância</strong> (ANOVA).</p>
+<section id="análise-de-variância-anova-de-fatores-únicos-one-way-anova" class="level2">
+<h2 class="anchored" data-anchor-id="análise-de-variância-anova-de-fatores-únicos-one-way-anova">Análise de Variância (ANOVA) de Fatores Únicos (One-Way ANOVA)</h2>
+<p>Vamos analisar o crescimento micelial in vitro de diferentes isolados (espécies). A ANOVA nos dirá se existe pelo menos um isolado diferindo dos demais. Utilizamos <code>coord_flip</code> para inverter os eixos facilitando a leitura de nomes longos.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>micelial <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"dados_diversos.xlsx"</span>, <span class="at">sheet =</span> <span class="st">"micelial"</span>)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>micelial <span class="sc">|&gt;</span></span>
-<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>(especie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>micelial <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"dados_diversos.xlsx"</span>, <span class="st">"micelial"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">count</span>(micelial, especie)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 2
   especie     n
@@ -848,84 +541,33 @@ alternative hypothesis: true location shift is not equal to 0</code></pre>
 4 Fgra        6
 5 Fmer        6</code></pre>
 </div>
-</div>
-</section>
-<section id="visualização-exploratória" class="level2">
-<h2 class="anchored" data-anchor-id="visualização-exploratória">Visualização exploratória</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>micelial <span class="sc">|&gt;</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(especie, tcm), <span class="at">y =</span> tcm)) <span class="sc">+</span></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.colour =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Espécie"</span>, <span class="at">y =</span> <span class="st">"Taxa de crescimento micelial"</span>) <span class="sc">+</span></span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>micelial <span class="sc">|&gt;</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">reorder</span>(especie,tcm),tcm))<span class="sc">+</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">outlier.color =</span> <span class="cn">NA</span>)<span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width=</span><span class="fl">0.2</span>)<span class="sc">+</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Aula4_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-</div>
-</section>
-<section id="modelo-de-anova" class="level2">
-<h2 class="anchored" data-anchor-id="modelo-de-anova">Modelo de ANOVA</h2>
-<p>O modelo clássico de ANOVA de um fator pode ser escrito como:</p>
-<p><span class="math display">\[
-Y_{ij} = \mu + \tau_i + \varepsilon_{ij}
-\]</span></p>
-<p>em que:</p>
-<ul>
-<li><span class="math inline">\(Y_{ij}\)</span> é a observação da unidade <span class="math inline">\(j\)</span> no grupo <span class="math inline">\(i\)</span>;</li>
-<li><span class="math inline">\(\mu\)</span> é a média geral;</li>
-<li><span class="math inline">\(\tau_i\)</span> é o efeito do grupo <span class="math inline">\(i\)</span>;</li>
-<li><span class="math inline">\(\varepsilon_{ij}\)</span> é o erro aleatório, assumido com distribuição normal, média zero e variância constante.</li>
-</ul>
-<p>As hipóteses são:</p>
-<p><span class="math display">\[
-H_0: \mu_1 = \mu_2 = \cdots = \mu_k
-\]</span></p>
-<p><span class="math display">\[
-H_1: \text{pelo menos uma média difere das demais}
-\]</span></p>
-<p>A estatística de teste é a razão entre o quadrado médio entre grupos e o quadrado médio residual:</p>
-<p><span class="math display">\[
-F = \frac{QM_{trat}}{QM_{res}}
-\]</span></p>
-<p>Valores altos de <span class="math inline">\(F\)</span> indicam maior evidência contra a hipótese nula.</p>
-</section>
-<section id="ajuste-do-modelo" class="level2">
-<h2 class="anchored" data-anchor-id="ajuste-do-modelo">Ajuste do modelo</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(tcm <span class="sc">~</span> especie, <span class="at">data =</span> micelial)</span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(m1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Função aov e lm produzem análises idênticas para ANOVA</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>m1 <span class="ot">&lt;-</span> <span class="fu">aov</span>(tcm<span class="sc">~</span> especie, <span class="at">data=</span> micelial)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>
-Call:
-lm(formula = tcm ~ especie, data = micelial)
+<pre><code>Analysis of Variance Table
 
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.23667 -0.09667  0.01583  0.08833  0.28333 
-
-Coefficients:
-            Estimate Std. Error t value Pr(&gt;|t|)    
-(Intercept)  1.57167    0.05585  28.140  &lt; 2e-16 ***
-especieFaus -0.33500    0.07899  -4.241 0.000266 ***
-especieFcor -0.25000    0.07899  -3.165 0.004047 ** 
-especieFgra -0.66000    0.07899  -8.356 1.05e-08 ***
-especieFmer -0.14500    0.07899  -1.836 0.078317 .  
+Response: tcm
+          Df  Sum Sq Mean Sq F value    Pr(&gt;F)    
+especie    4 1.46958 0.36739  19.629 2.028e-07 ***
+Residuals 25 0.46792 0.01872                      
 ---
-Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-
-Residual standard error: 0.1368 on 25 degrees of freedom
-Multiple R-squared:  0.7585,    Adjusted R-squared:  0.7199 
-F-statistic: 19.63 on 4 and 25 DF,  p-value: 2.028e-07</code></pre>
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>m2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(tcm<span class="sc">~</span> especie, <span class="at">data=</span> micelial)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="fu">anova</span>(m2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Analysis of Variance Table
 
@@ -937,59 +579,36 @@ Residuals 25 0.46792 0.01872
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
-<hr>
-</section>
-</section>
-<section id="parte-6-diagnóstico-dos-pressupostos-da-anova" class="level1">
-<h1>Parte 6 — Diagnóstico dos pressupostos da ANOVA</h1>
-<p>A ANOVA clássica assume:</p>
-<ol type="1">
-<li>independência dos erros;</li>
-<li>normalidade dos resíduos;</li>
-<li>homogeneidade de variâncias.</li>
-</ol>
-<section id="inspeção-da-normalidade-resíduos" class="level2">
-<h2 class="anchored" data-anchor-id="inspeção-da-normalidade-resíduos">Inspeção da normalidade resíduos</h2>
+<section id="premissas-do-modelo-de-anova" class="level3">
+<h3 class="anchored" data-anchor-id="premissas-do-modelo-de-anova">Premissas do modelo de ANOVA</h3>
+<p>Para confiarmos nos resultados da ANOVA, os resíduos do modelo precisam atender a duas premissas principais: 1. <strong>Normalidade dos resíduos</strong>: Avaliada pelo Teste de Shapiro-Wilk. 2. <strong>Homocedasticidade ou homogeneidade de variâncias</strong>: Avaliada pelo Teste de Bartlett, onde <span class="math inline">\(H_0\)</span> determina que as variâncias dos grupos são estatisticamente iguais.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(m1<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hist</span>(m2<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-20-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Aula4_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(m1<span class="sc">$</span>residuals)</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(m1<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">qqnorm</span>(m2<span class="sc">$</span>residuals)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qqline</span>(m2<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-20-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Aula4_files/figure-html/unnamed-chunk-9-2.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(m1<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">shapiro.test</span>(m2<span class="sc">$</span>residuals)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Shapiro-Wilk normality test
 
-data:  m1$residuals
+data:  m2$residuals
 W = 0.9821, p-value = 0.8782</code></pre>
 </div>
-</div>
-</section>
-<section id="homogeneidade-de-variâncias" class="level2">
-<h2 class="anchored" data-anchor-id="homogeneidade-de-variâncias">Homogeneidade de variâncias</h2>
-<p>O teste de Bartlett avalia a hipótese de igualdade das variâncias entre grupos:</p>
-<p><span class="math display">\[
-H_0: \sigma_1^2 = \sigma_2^2 = \cdots = \sigma_k^2
-\]</span></p>
-<ul>
-<li><p><span class="math inline">\(H_0\)</span> (Hipótese Nula): As variâncias de todas as espécies são iguais (homogêneas). <strong>(É o que nós queremos!)</strong></p></li>
-<li><p><span class="math inline">\(H_1\)</span> (Hipótese Alternativa): Pelo menos uma das espécies tem uma variação muito maior ou menor que as outras (heterogêneas).</p></li>
-</ul>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(tcm <span class="sc">~</span> especie, <span class="at">data =</span> micelial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bartlett.test</span>(tcm<span class="sc">~</span>especie, <span class="at">data=</span>micelial)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
     Bartlett test of homogeneity of variances
@@ -999,27 +618,56 @@ Bartlett's K-squared = 4.4367, df = 4, p-value = 0.3501</code></pre>
 </div>
 </div>
 </section>
-<section id="comentário" class="level2">
-<h2 class="anchored" data-anchor-id="comentário">Comentário</h2>
-<p>Assim como na análise anterior, os diagnósticos não devem ser interpretados apenas de forma mecânica. A inspeção gráfica dos resíduos é essencial para avaliar desvios importantes da normalidade e da homogeneidade.</p>
-<hr>
-</section>
-</section>
-<section id="parte-7-médias-ajustadas-com-emmeans-e-comparação-de-tukey" class="level1">
-<h1>Parte 7 — Médias ajustadas com <code>emmeans</code> e comparação de Tukey</h1>
-<section id="por-que-não-comparar-pares-com-vários-testes-t" class="level2">
-<h2 class="anchored" data-anchor-id="por-que-não-comparar-pares-com-vários-testes-t">Por que não comparar pares com vários testes <em>t</em>?</h2>
-<p>Depois que a ANOVA indica diferença global entre médias, surge a pergunta: <strong>quais grupos diferem entre si?</strong></p>
-<p>Uma estratégia inadequada seria fazer vários testes <em>t</em> independentes, pois isso inflaciona a probabilidade de erro do tipo I. Para contornar esse problema, utilizamos procedimentos de comparação múltipla que controlam esse erro, como o método de <strong>Tukey</strong>.</p>
-</section>
-<section id="médias-marginais-estimadas" class="level2">
-<h2 class="anchored" data-anchor-id="médias-marginais-estimadas">Médias marginais estimadas</h2>
-<p>O pacote <code>emmeans</code> calcula as médias ajustadas do modelo, também chamadas de médias marginais estimadas.</p>
+<section id="teste-de-comparações-múltiplas-de-médias" class="level3">
+<h3 class="anchored" data-anchor-id="teste-de-comparações-múltiplas-de-médias">Teste de Comparações Múltiplas de Médias</h3>
+<p>Se a ANOVA apontar significância, fazemos o teste de separação de médias (e.g., Tukey) para criar grupos (letras indicativas). O pacote <code>emmeans</code> avalia as médias estimadas, e <code>cld</code> atribui letras de significância. O pacote <code>multcomp</code> auxilia na plotagem elegante destas diferenças estatísticas.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>medias_m1 <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m1, <span class="sc">~</span> especie)</span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>medias_m1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("emmeans")</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("multcomp")</span></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(emmeans)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Welcome to emmeans.
+Caution: You lose important information if you filter this package's results.
+See '? untidy'</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(multcomp)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: mvtnorm</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: survival</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: TH.data</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Carregando pacotes exigidos: MASS</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Anexando pacote: 'MASS'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>O seguinte objeto é mascarado por 'package:rstatix':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>O seguinte objeto é mascarado por 'package:dplyr':
+
+    select</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>
+Anexando pacote: 'TH.data'</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>O seguinte objeto é mascarado por 'package:MASS':
+
+    geyser</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>medias_m2 <span class="ot">&lt;-</span> <span class="fu">emmeans</span>(m2, <span class="sc">~</span>especie)</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>medias_m2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> especie emmean     SE df lower.CL upper.CL
  Fasi     1.572 0.0559 25    1.457     1.69
@@ -1030,132 +678,32 @@ Bartlett's K-squared = 4.4367, df = 4, p-value = 0.3501</code></pre>
 
 Confidence level used: 0.95 </code></pre>
 </div>
-</div>
-</section>
-<section id="comparações-múltiplas-de-tukey" class="level2">
-<h2 class="anchored" data-anchor-id="comparações-múltiplas-de-tukey">Comparações múltiplas de Tukey</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(medias_m1, <span class="at">adjust =</span> <span class="st">"tukey"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> contrast    estimate    SE df t.ratio p.value
- Fasi - Faus    0.335 0.079 25   4.241  0.0023
- Fasi - Fcor    0.250 0.079 25   3.165  0.0302
- Fasi - Fgra    0.660 0.079 25   8.356 &lt;0.0001
- Fasi - Fmer    0.145 0.079 25   1.836  0.3765
- Faus - Fcor   -0.085 0.079 25  -1.076  0.8169
- Faus - Fgra    0.325 0.079 25   4.115  0.0031
- Faus - Fmer   -0.190 0.079 25  -2.405  0.1469
- Fcor - Fgra    0.410 0.079 25   5.191  0.0002
- Fcor - Fmer   -0.105 0.079 25  -1.329  0.6761
- Fgra - Fmer   -0.515 0.079 25  -6.520 &lt;0.0001
-
-P value adjustment: tukey method for comparing a family of 5 estimates </code></pre>
-</div>
-</div>
-</section>
-<section id="letras-de-agrupamento" class="level2">
-<h2 class="anchored" data-anchor-id="letras-de-agrupamento">Letras de agrupamento</h2>
-<p>Uma forma prática de resumir os resultados é usar letras para indicar grupos estatisticamente semelhantes. Médias seguidas pela mesma letra não diferem entre si ao nível de significância adotado.</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>medias_m1b <span class="ot">&lt;-</span> <span class="fu">cld</span>(medias_m1, <span class="at">Letters =</span> letters)</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>medias_m1b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code> especie emmean     SE df lower.CL upper.CL .group
- Fgra     0.912 0.0559 25    0.797     1.03  a    
- Faus     1.237 0.0559 25    1.122     1.35   b   
- Fcor     1.322 0.0559 25    1.207     1.44   b   
- Fmer     1.427 0.0559 25    1.312     1.54   bc  
- Fasi     1.572 0.0559 25    1.457     1.69    c  
-
-Confidence level used: 0.95 
-P value adjustment: tukey method for comparing a family of 5 estimates 
-significance level used: alpha = 0.05 
-NOTE: If two or more means share the same grouping symbol,
-      then we cannot show them to be different.
-      But we also did not show them to be the same. </code></pre>
-</div>
-</div>
-</section>
-<section id="gráfico-das-médias-com-intervalos-de-confiança-e-letras" class="level2">
-<h2 class="anchored" data-anchor-id="gráfico-das-médias-com-intervalos-de-confiança-e-letras">Gráfico das médias com intervalos de confiança e letras</h2>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>medias_m1b <span class="sc">|&gt;</span></span>
-<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(especie, emmean), <span class="at">y =</span> emmean, <span class="at">label =</span> .group)) <span class="sc">+</span></span>
-<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL), <span class="at">width =</span> <span class="fl">0.06</span>) <span class="sc">+</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">hjust =</span> <span class="dv">0</span>, <span class="at">nudge_y =</span> <span class="fl">0.12</span>, <span class="at">size =</span> <span class="dv">4</span>) <span class="sc">+</span></span>
-<span id="cb50-6"><a href="#cb50-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()<span class="sc">+</span></span>
-<span id="cb50-7"><a href="#cb50-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
-<span id="cb50-8"><a href="#cb50-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb50-9"><a href="#cb50-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">""</span>,</span>
-<span id="cb50-10"><a href="#cb50-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Taxa de crescimento micelial (mm/dia)"</span>) <span class="sc">+</span></span>
-<span id="cb50-11"><a href="#cb50-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>medias_m2b <span class="ot">&lt;-</span> <span class="fu">cld</span>(medias_m2, <span class="at">Letters=</span>letters)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a>medias_m2b <span class="sc">|&gt;</span> </span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="fu">reorder</span>(especie, emmean), emmean, <span class="at">label=</span>.group))<span class="sc">+</span></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymax =</span> upper.CL,</span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>                    <span class="at">ymin =</span> lower.CL),</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a>                <span class="at">width=</span><span class="fl">0.1</span>)<span class="sc">+</span></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ylim</span>(<span class="dv">0</span>,<span class="dv">2</span>)<span class="sc">+</span></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_flip</span>()<span class="sc">+</span></span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x=</span><span class="st">"Isolado"</span>, <span class="at">y=</span> <span class="st">"Taxa de crescimento micelial (mm/dia)"</span>)<span class="sc">+</span></span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="at">hjust=</span><span class="dv">0</span>, <span class="at">nudge_y=</span> <span class="fl">0.12</span>, <span class="at">size=</span><span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Aula4_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="Aula4_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<hr>
-</section>
-</section>
-<section id="parte-8-síntese-conceitual-da-aula" class="level1">
-<h1>Parte 8 — Síntese conceitual da aula</h1>
-<section id="teste-t-para-amostras-independentes" class="level2">
-<h2 class="anchored" data-anchor-id="teste-t-para-amostras-independentes">1. Teste <em>t</em> para amostras independentes</h2>
-<p>Usado para comparar a média de dois grupos independentes.</p>
-<ul>
-<li>Unidade analítica em cada grupo é diferente.</li>
-<li>Exemplo desta aula: comparação da AUDPC entre tratamentos de irrigação.</li>
-</ul>
-</section>
-<section id="teste-t-pareado" class="level2">
-<h2 class="anchored" data-anchor-id="teste-t-pareado">2. Teste <em>t</em> pareado</h2>
-<p>Usado quando as duas medidas vêm dos mesmos indivíduos ou de unidades emparelhadas.</p>
-<ul>
-<li>O teste é realizado sobre as diferenças entre pares.</li>
-<li>Exemplo desta aula: comparação da acurácia dos mesmos avaliadores sob duas condições.</li>
-</ul>
-</section>
-<section id="teste-de-wilcoxon-pareado" class="level2">
-<h2 class="anchored" data-anchor-id="teste-de-wilcoxon-pareado">3. Teste de Wilcoxon pareado</h2>
-<p>Alternativa não paramétrica ao teste <em>t</em> pareado.</p>
-<ul>
-<li>Útil quando a distribuição das diferenças é muito assimétrica ou quando há clara violação da normalidade.</li>
-</ul>
-</section>
-<section id="anova" class="level2">
-<h2 class="anchored" data-anchor-id="anova">4. ANOVA</h2>
-<p>Usada para comparar três ou mais médias simultaneamente.</p>
-<ul>
-<li>Primeiro testa-se o efeito global.</li>
-<li>Depois, se necessário, investigam-se comparações múltiplas.</li>
-</ul>
-</section>
-<section id="emmeans-e-tukey" class="level2">
-<h2 class="anchored" data-anchor-id="emmeans-e-tukey">5. <code>emmeans</code> e Tukey</h2>
-<p>Permitem estimar médias ajustadas e comparar grupos com controle do erro associado a múltiplas comparações.</p>
-<hr>
-</section>
-</section>
-<section id="parte-9-sugestões-de-interpretação-para-o-relatório" class="level1">
-<h1>Parte 9 — Sugestões de interpretação para o relatório</h1>
-<p>Ao redigir resultados, procure separar claramente:</p>
-<ol type="1">
-<li><strong>descrição dos dados</strong>, com médias e medidas de dispersão;</li>
-<li><strong>resultado do teste global</strong>, com estatística e valor de <em>p</em>;</li>
-<li><strong>comparações específicas</strong>, quando cabíveis;</li>
-<li><strong>interpretação biológica</strong> dos resultados.</li>
-</ol>
-<p>Exemplo de estrutura textual:</p>
-<blockquote class="blockquote">
-<p>A AUDPC média foi maior em um dos tratamentos de irrigação. O teste <em>t</em> para amostras independentes indicou diferença significativa entre as médias dos grupos (<em>p</em> &lt; 0,05). No experimento com avaliadores, a acurácia diferiu entre as condições quando analisada de forma pareada. Para os dados de crescimento micelial, a ANOVA indicou efeito de espécie, e as comparações de Tukey permitiram identificar quais espécies apresentaram médias distintas.</p>
-</blockquote>
-<hr>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
